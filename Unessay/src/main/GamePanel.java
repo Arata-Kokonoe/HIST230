@@ -7,13 +7,15 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
+import entity.Player;
+
 public class GamePanel extends JPanel implements Runnable{
 
     // Screen Settings
     final int originalTileSize = 16; // 16x16 tile size (16 is average for older retro games)
     final int scale = 3;    // scale accounting for bigger monitor resolutions in modern times
 
-    final int tileSize = originalTileSize * scale; // 48x48 tile is what we are left with if 16 * 3
+    public final int tileSize = originalTileSize * scale; // 48x48 tile is what we are left with if 16 * 3
     final int maxScreenCol = 16;    // how many tiles long do we want screen
     final int maxScreenRow = 12;    // how many tiles high do we want screen
     // 4:3 ratio
@@ -26,7 +28,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;  //thread can be started/stopped; once its started, it keeps program running until you stop it; calls the run method
-    
+    Player player = new Player(this, keyH);
     
 
     // Set player's default position
@@ -116,28 +118,15 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
     public void update(){
-        if(keyH.upPressed == true){
-            playerY -= playerSpeed;
-        }
-        else if(keyH.downPressed == true){
-            playerY += playerSpeed;
-        }
-        else if(keyH.leftPressed == true){
-            playerX -= playerSpeed;
-        }
-        else if(keyH.rightPressed == true){
-            playerX += playerSpeed;
-        }
+        player.update();
     }
     public void paintComponent(Graphics g){
 
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D)g;  //Graphics2D extends Graphics class to provide more changeability
-    
-        g2.setColor(Color.white);
 
-        g2.fillRect(playerX, playerY, tileSize, tileSize);
+        player.draw(g2);
 
         g2.dispose(); //gets rid of g2, saves memory + resources
     }
