@@ -33,7 +33,7 @@ public class Player extends Entity{
     }
 
     public void getPlayerImage(){
-
+        System.out.println("Image loading started");
         try{
             up1 = ImageIO.read(getClass().getResourceAsStream("/res/player/CHS_up_1.png"));
             up2 = ImageIO.read(getClass().getResourceAsStream("/res/player/CHS_up_2.png"));
@@ -47,6 +47,7 @@ public class Player extends Entity{
         catch(IOException e){
             e.printStackTrace();
         }
+        System.out.println("Image loading ended");
     }
 
     public void update(){
