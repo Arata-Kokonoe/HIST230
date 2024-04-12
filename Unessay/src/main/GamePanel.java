@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 import entity.Player;
+import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
 
@@ -16,26 +17,20 @@ public class GamePanel extends JPanel implements Runnable{
     final int scale = 3;    // scale accounting for bigger monitor resolutions in modern times
 
     public final int tileSize = originalTileSize * scale; // 48x48 tile is what we are left with if 16 * 3
-    final int maxScreenCol = 16;    // how many tiles long do we want screen
-    final int maxScreenRow = 12;    // how many tiles high do we want screen
+    public final int maxScreenCol = 16;    // how many tiles long do we want screen
+    public final int maxScreenRow = 12;    // how many tiles high do we want screen
     // 4:3 ratio
 
-    final int screenWidth = tileSize * maxScreenCol;    // 768 pixels
-    final int screenHeight = tileSize * maxScreenRow;   // 576 pixels
+    public final int screenWidth = tileSize * maxScreenCol;    // 768 pixels
+    public final int screenHeight = tileSize * maxScreenRow;   // 576 pixels
 
     //FPS
     int FPS = 60;
 
+    TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;  //thread can be started/stopped; once its started, it keeps program running until you stop it; calls the run method
     Player player = new Player(this, keyH);
-    
-
-    // Set player's default position
-    int playerX = 100;
-    int playerY = 100;
-    int playerSpeed = 4;
-
 
     public GamePanel(){
         
@@ -125,6 +120,8 @@ public class GamePanel extends JPanel implements Runnable{
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D)g;  //Graphics2D extends Graphics class to provide more changeability
+
+        tileM.draw(g2);
 
         player.draw(g2);
 
