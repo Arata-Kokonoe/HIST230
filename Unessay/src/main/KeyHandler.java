@@ -1,11 +1,19 @@
 package main;
 
+import java.awt.RenderingHints.Key;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener{
 
-    public boolean upPressed, downPressed, leftPressed, rightPressed;
+    GamePanel gp;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, interactPressed;
+    // DEBUG
+    boolean checkDrawTime = false;
+
+    public KeyHandler(GamePanel gp){
+        this.gp = gp;
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -16,22 +24,102 @@ public class KeyHandler implements KeyListener{
         
         int code = e.getKeyCode();
 
-        if (code == KeyEvent.VK_W){
-            upPressed = true;
+        //TITLE STATE
+        if(gp.gameState == gp.titleState){
+
+            if(gp.ui.titleScreenState == 0){
+
+                if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP){
+                    gp.ui.commandNum--;
+                    if(gp.ui.commandNum < 0){
+                        gp.ui.commandNum = 3;
+                    }
+                }
+                if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN){
+                    gp.ui.commandNum++;
+                    if(gp.ui.commandNum > 3){
+                        gp.ui.commandNum = 0;
+                    }
+                }
+                if(code == KeyEvent.VK_SPACE){
+                    if(gp.ui.commandNum == 0){
+                        gp.gameState = gp.playState;
+                        gp.playMusic(0);
+                    }
+                    if(gp.ui.commandNum == 1){
+                        
+                    }
+                    if(gp.ui.commandNum == 2){
+                        gp.ui.titleScreenState = 1;
+                    }
+
+                    if(gp.ui.commandNum == 3){
+                        System.exit(0);
+                    }
+                }
+            }
+            
+            if(gp.ui.titleScreenState == 1){
+                if (code == KeyEvent.VK_ESCAPE){
+                    gp.ui.titleScreenState = 0;
+                }
+            }
+
+            
+        }
+        //PLAY STATE
+        if(gp.gameState == gp.playState){
+            if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP){
+                upPressed = true;
+            }
+
+            if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN){
+                downPressed = true;
+            }
+            
+            if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT){
+                leftPressed = true;
+            }
+
+            if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT){
+                rightPressed = true;
+            }
+            if (code == KeyEvent.VK_P){
+                gp.gameState = gp.pauseState;
+            }
+            if (code == KeyEvent.VK_SPACE){
+                interactPressed = true;
+            }
+
+            // DEBUG
+            if(code == KeyEvent.VK_T){
+                if(checkDrawTime == false){
+                    checkDrawTime = true;
+                }
+                else if (checkDrawTime == true){
+                    checkDrawTime = false;
+                }
+            }
         }
 
-        if (code == KeyEvent.VK_S){
-            downPressed = true;
-        }
-        
-        if (code == KeyEvent.VK_A){
-            leftPressed = true;
-        }
-
-        if (code == KeyEvent.VK_D){
-            rightPressed = true;
+        //PAUSE STATE
+        else if(gp.gameState == gp.pauseState){
+            if (code == KeyEvent.VK_P){
+                gp.gameState = gp.playState;
+            }
         }
 
+        //DIALOGUE STATE
+        else if(gp.gameState == gp.dialogueState){
+            if (code == KeyEvent.VK_ESCAPE){
+                gp.talkingEntity.dialogueIndex = 0;
+                gp.talkingEntity = null;
+                gp.gameState = gp.playState;
+            }
+            if (code == KeyEvent.VK_SPACE){
+                interactPressed = true;
+            }
+        }
     }
 
     @Override
