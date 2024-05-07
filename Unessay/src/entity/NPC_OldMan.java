@@ -17,7 +17,7 @@ public class NPC_OldMan extends Entity{
         setDialogue();
     }
 
-     public void getImage(){
+    public void getImage(){
         
         left0 = setup("/npc/CHS_left_1");
         left1 = setup("/npc/CHS_left_2");
@@ -32,12 +32,12 @@ public class NPC_OldMan extends Entity{
     }
 
     public void setDialogue (){
-        dialogues[0] = "Hello, lad.";
-        dialogues[1] = "hehehaw";
+        dialogues[0] = "Hello!";
+        dialogues[1] = "dialogue1";
         dialogues[2] = "dialogue2";
         dialogues[3] = "dialogue3";
-        dialogues[4] = "sussy";
-        dialogues[5] = "dialogue4";
+        dialogues[4] = "dialogue4";
+        dialogues[5] = "dialogue5";
     }
 
     public void setAction(){

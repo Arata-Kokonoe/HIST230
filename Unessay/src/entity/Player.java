@@ -1,8 +1,12 @@
 package entity;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.nio.Buffer;
 
 import main.GamePanel;
 import main.KeyHandler;
@@ -44,6 +48,10 @@ public class Player extends Entity{
         speed = 4;
         direction = "right";
         leftOrRight = "right";
+
+        //PLAYER STATUS
+        maxLife = 100;
+        life = maxLife;
     }
 
     public void getPlayerImage(){
@@ -75,7 +83,7 @@ public class Player extends Entity{
     public void update(){
 
         if(keyH.upPressed == true || keyH.downPressed == true
-            || keyH.leftPressed == true || keyH.rightPressed == true){
+            || keyH.leftPressed == true || keyH.rightPressed == true || keyH.interactPressed == true){
 
             if (keyH.upPressed == true && keyH.leftPressed == true){
                 direction = "upleft";
@@ -120,6 +128,15 @@ public class Player extends Entity{
             int npcIndex = gp.cChecker.checkEntity(this, gp.npc);
             interactNPC(npcIndex);
 
+            // CHECK ENEMY COLLISION
+            int monsterIndex = gp.cChecker.checkEntity(this, gp.enemies);
+            contactMonster(monsterIndex);
+
+            //CHECK EVENT COLLISION
+            gp.eHandler.checkEvent();
+
+            gp.keyH.interactPressed = false; //turn off interact pressed outside of check methods so it doesnt constantly turn off
+
             //IF COLLISION IS FALSE, PLAYER CAN MOVE
             if(collisionOn == false){
                 switch(direction){
@@ -163,13 +180,22 @@ public class Player extends Entity{
                 spriteCounter = 0;
             }
         }
+        //This needs to be outside of key if statement
+        if(invincible == true){
+            invincibleCounter++;
+            if(invincibleCounter > 10){
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
     }
 
     public void updateDialogue(){
         if(gp.keyH.interactPressed == true){
-            gp.talkingEntity.speak();
+            if(gp.talkingEntity != null) gp.talkingEntity.speak();
         }
         gp.keyH.interactPressed = false; 
+        System.out.println("interactPressed = false");
     }
     public void pickUpObject(int i){
         
@@ -219,7 +245,15 @@ public class Player extends Entity{
                 gp.npc[i].speak();
             }
         }
-        gp.keyH.interactPressed = false;
+    }
+
+    public void contactMonster(int i){
+        if (i != 999){
+            if(invincible == false){
+                life -= 1;
+                invincible = true;
+            }
+        }
     }
 
     public void draw(Graphics2D g2){
@@ -289,8 +323,45 @@ public class Player extends Entity{
                 if(spriteNum == 3) image = right2;
                 if(spriteNum == 4) image = right3;
                 break;
-        }
-        g2.drawImage(image, screenX, screenY, null);
-    }
+        } //end of switch
+        if (invincible == true){ //although it may seem contradictory, I use this invinvible time to signal that the player took damage (so he turns red)
+            //g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+            //opacity of 0.3 (aka 70% transparent)
 
-}
+            //first, generate mask
+            int imgWidth = image.getWidth();
+            int imgHeight = image.getHeight();
+
+            BufferedImage imgMask = new BufferedImage(imgWidth, imgHeight, BufferedImage.TRANSLUCENT);
+            Graphics2D g1 = imgMask.createGraphics();
+
+            g1.drawImage(image, 0, 0, null);
+            g1.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 0.5f));
+            g1.setColor(Color.red);
+
+            g1.fillRect(0, 0, image.getWidth(), image.getHeight());
+            g1.dispose();
+
+            //then, generate tinted image
+            BufferedImage tinted = new BufferedImage(imgWidth, imgHeight, BufferedImage.TRANSLUCENT);
+            Graphics2D g3 = tinted.createGraphics();
+            g3.drawImage(image, 0, 0, null);
+            g3.drawImage(imgMask, 0, 0, null);
+            g3.dispose();
+
+
+            //finally, draw the tinted image
+            g2.drawImage(tinted, screenX, screenY, null);
+
+            //code to tint an image taken from https://stackoverflow.com/questions/14225518/tinting-image-in-java-improvement?noredirect=1&lq=1
+            
+            //later, add code for blood particles
+        }
+        else{
+            g2.drawImage(image, screenX, screenY, null); //draw player
+        }
+        //reset alpha
+        //g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+    } //end of draw method
+
+} //end of Player class

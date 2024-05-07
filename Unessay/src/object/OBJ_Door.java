@@ -1,28 +1,25 @@
 package object;
 
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
+import entity.Entity;
 import main.GamePanel;
 
-public class OBJ_Door extends SuperObject{
+public class OBJ_Door extends Entity{
 
-    GamePanel gp;
 
     public OBJ_Door(GamePanel gp){
 
-        this.gp = gp;
-
+        super(gp);
+        
         name = "Door";
+        right0 = setup("/objects/door");
 
-        try{
-            image = ImageIO.read(getClass().getResourceAsStream("/res/objects/door.png"));
-            uTool.scaleImage(image, gp.tileSize, gp.tileSize);
-        }catch(IOException e){
-            e.printStackTrace();;
-        }
-
+        //hitbox.x = 5 or something if we want to change hitbox of the key
         collision = true;
+        hitbox.x = 0;
+        hitbox.y = 16;
+        hitbox.width = 48;
+        hitbox.height = 32;
+        hitboxDefaultX = hitbox.x;
+        hitboxDefaultY = hitbox.y;
     }
 }

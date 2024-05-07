@@ -11,14 +11,14 @@ import main.UtilityTool;
 
 public class Entity {
    
-    GamePanel gp;
+    public GamePanel gp;
     public int worldX, worldY;
     public int speed;
 
     public BufferedImage left0, left1, left2, left3, right0, right1, right2, right3;
     public BufferedImage closeup;
-    public String direction;
-    public String leftOrRight;
+    public String direction = "right";
+    public String leftOrRight = "right";
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
@@ -28,8 +28,19 @@ public class Entity {
     public boolean collisionOn = false;
 
     public int actionLockCounter;
+    public boolean invincible = false;
+    public int invincibleCounter;
     String dialogues[] = new String[20];
     public int dialogueIndex = 0;
+
+    public BufferedImage image;
+    public String name;
+    public boolean collision = false;
+    public int type; // 0 = player, 1= npc, 2 = enemy
+
+    //CHARACTER STATUS
+    public int maxLife;
+    public int life;
 
     public Entity (GamePanel gp){
         this.gp = gp;
@@ -41,6 +52,7 @@ public class Entity {
             gp.gameState = gp.playState;
             gp.talkingEntity.dialogueIndex = 0;
             gp.talkingEntity = null;
+            gp.ui.currentCloseup = null;
             return;
         }
         gp.ui.currentDialogue = dialogues[dialogueIndex];
@@ -64,7 +76,16 @@ public class Entity {
         collisionOn = false;
         gp.cChecker.checkTile(this);
         gp.cChecker.checkObject(this, false);
-        gp.cChecker.checkPlayer(this);
+        gp.cChecker.checkEntity(this, gp.npc);
+        gp.cChecker.checkEntity(this, gp.enemies);
+        boolean contactPlayer = gp.cChecker.checkPlayer(this);
+
+        if(this.type == 2 && contactPlayer == true){
+            if(gp.player.invincible == false){
+                gp.player.life -=5;
+                gp.player.invincible = true;
+            }
+        }
 
         if(collisionOn == false){
             switch(direction){
@@ -221,4 +242,5 @@ public class Entity {
 
         return image;
     }
+
 }

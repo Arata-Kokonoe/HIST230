@@ -1,27 +1,16 @@
 package object;
 
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 import main.GamePanel;
+import entity.Entity;
 
-public class OBJ_Key extends SuperObject{
+public class OBJ_Key extends Entity{
 
-    GamePanel gp;
 
     public OBJ_Key(GamePanel gp){
+        super(gp);
 
-        this.gp = gp;
-        
         name = "Key";
-
-        try{
-            image = ImageIO.read(getClass().getResourceAsStream("/res/objects/key.png"));
-            uTool.scaleImage(image, gp.tileSize, gp.tileSize);
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+        right1 = setup("/object/key");
 
         //hitbox.x = 5 or something if we want to change hitbox of the key
     }

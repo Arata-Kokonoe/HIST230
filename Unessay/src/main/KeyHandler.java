@@ -44,7 +44,7 @@ public class KeyHandler implements KeyListener{
                 if(code == KeyEvent.VK_SPACE){
                     if(gp.ui.commandNum == 0){
                         gp.gameState = gp.playState;
-                        gp.playMusic(0);
+                        //gp.playMusic(0);
                     }
                     if(gp.ui.commandNum == 1){
                         
@@ -58,7 +58,7 @@ public class KeyHandler implements KeyListener{
                     }
                 }
             }
-            
+
             if(gp.ui.titleScreenState == 1){
                 if (code == KeyEvent.VK_ESCAPE){
                     gp.ui.titleScreenState = 0;
@@ -89,6 +89,7 @@ public class KeyHandler implements KeyListener{
             }
             if (code == KeyEvent.VK_SPACE){
                 interactPressed = true;
+                System.out.println("interactPressed = true");
             }
 
             // DEBUG
@@ -112,12 +113,13 @@ public class KeyHandler implements KeyListener{
         //DIALOGUE STATE
         else if(gp.gameState == gp.dialogueState){
             if (code == KeyEvent.VK_ESCAPE){
-                gp.talkingEntity.dialogueIndex = 0;
+                if (gp.talkingEntity != null) gp.talkingEntity.dialogueIndex = 0;
                 gp.talkingEntity = null;
                 gp.gameState = gp.playState;
             }
             if (code == KeyEvent.VK_SPACE){
                 interactPressed = true;
+                System.out.println("interactPressed = true");
             }
         }
     }

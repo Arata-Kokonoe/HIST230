@@ -1,10 +1,13 @@
 package main;
 
+import main.UtilityTool;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,18 +17,19 @@ public class UI {
     GamePanel gp;
     Graphics2D g2;
     Font maruMonica, purisaB;
+    UtilityTool utool;
     public boolean messageOn = false;
     public String message = "";
     int messageCounter = 0;
     public boolean gameFinished = false;
     public String currentDialogue = "";
-    public BufferedImage currentCloseup;
+    public BufferedImage currentCloseup = null;
     public int commandNum = 0;
     public int titleScreenState = 0; //0: first screen, 1: second screen
 
     public UI(GamePanel gp){
         this.gp = gp;
-
+        utool = new UtilityTool();
         
         try {
             InputStream is = getClass().getResourceAsStream("/res/fonts/maruMonica.ttf");
@@ -62,16 +66,37 @@ public class UI {
         
         //PLAY STATE
         if(gp.gameState == gp.playState){
-            //do playstate stuff later
+            drawPlayerLife();
         }
         //PAUSE STATE
         if(gp.gameState == gp.pauseState){
+            drawPlayerLife();
             drawPauseScreen();
         }
         //DIALOGUE STATE
         if(gp.gameState == gp.dialogueState){
+            drawPlayerLife();
             drawDialogueScreen();
         }
+    }
+
+    public void drawPlayerLife(){
+        int x = gp.screenWidth/2 - (gp.tileSize/2);
+        int y = (int)(gp.screenHeight/2 - (gp.tileSize/1.5));
+        double width = gp.tileSize * (gp.player.maxLife / 100);
+
+        //code to draw a line using doubles taken from https://stackoverflow.com/questions/7759549/java-draw-line-based-on-doubles-sub-pixel-precision
+        //DRAW BACK OF HEALTHBAR
+        g2.setColor(Color.black);
+        g2.setStroke(new BasicStroke(2));
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+        g2.draw(new Line2D.Double(x, y, x + width, y));
+        
+        //DRAW CURRENT HEALTHBAR
+        g2.setColor(Color.red);
+        width = gp.tileSize * (gp.player.life / 100.0);
+        g2.draw(new Line2D.Double(x, y, x + width, y));
     }
 
     public void drawTitleScreen(){
@@ -214,13 +239,14 @@ public class UI {
         g2.fillRoundRect(x, y, width, height, 35, 35);
 
         c = new Color(255, 255, 255);
-        g2.setColor(c);
-        g2.setStroke(new BasicStroke(5)); //width of outlines of graphics
-        g2.drawRoundRect(x+5, y+5, width-10, height-10, 25, 25);
+            g2.setColor(c);
+            g2.setStroke(new BasicStroke(5)); //width of outlines of graphics
+            g2.drawRoundRect(x+5, y+5, width-10, height-10, 25, 25);
 
-        g2.drawImage(currentCloseup, null, x+25, y+25);
-        g2.drawRoundRect(x+25, y+25, gp.tileSize*3, gp.tileSize*3, 15, 15);
-        
+        if(currentCloseup != null){
+            g2.drawImage(utool.scaleImage(currentCloseup, 144, 144), null, x+25, y+25);
+            g2.drawRoundRect(x+25, y+25, gp.tileSize*3, gp.tileSize*3, 15, 15);
+        }
     }
 
     public int getXForCenteredText(String text){
