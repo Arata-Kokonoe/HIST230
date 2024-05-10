@@ -29,8 +29,8 @@ public class GamePanel extends JPanel implements Runnable{
     public final int screenHeight = tileSize * maxScreenRow;   // 576 pixels
 
     // World Settings
-    public final int maxWorldCol = 50;
-    public final int maxWorldRow = 50;
+    public final int maxWorldCol = 100;
+    public final int maxWorldRow = 100;
     //public final int worldWidth = tileSize * maxWorldCol;
     //public final int worldHeight = tileSize * maxWorldRow;
 
@@ -46,13 +46,14 @@ public class GamePanel extends JPanel implements Runnable{
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
     public EventHandler eHandler = new EventHandler(this);
+    public EnemySpawner eSpawner = new EnemySpawner(this);
     Thread gameThread;  //thread can be started/stopped; once its started, it keeps program running until you stop it; calls the run method
     
     //ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
     public Entity obj[] = new Entity[10];
     public Entity npc[] = new Entity[10];
-    public Entity enemies[] = new Entity[10];
+    public Entity enemies[] = new Entity[100];
     public Entity talkingEntity;
     ArrayList<Entity> entityList = new ArrayList<>();
 
@@ -169,9 +170,14 @@ public class GamePanel extends JPanel implements Runnable{
             }
 
             //ENEMY
+            eSpawner.spawnEnemy();
             for(int i = 0; i < enemies.length; i++){
                 if(enemies[i] != null){
-                    enemies[i].update();
+                    if(enemies[i].checkOffscreen()){
+                        enemies[i] = null;
+                        if (eSpawner.spawnEnemyFast() != -1) enemies[i].update();;
+                    }
+                    else enemies[i].update();
                 }
             }
         }

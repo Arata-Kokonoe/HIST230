@@ -56,8 +56,8 @@ public class AssetSetter {
 
     public void setEnemy(){
         gp.enemies[0] = new ENE_sanCulotte(gp);
-        gp.enemies[0].worldX = gp.tileSize*19;
-        gp.enemies[0].worldY = gp.tileSize*21;
+        gp.enemies[0].worldX = gp.tileSize*51;
+        gp.enemies[0].worldY = gp.tileSize*51;
 
         gp.enemies[1] = new ENE_sanCulotte(gp);
         gp.enemies[1].worldX = gp.tileSize*25;

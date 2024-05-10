@@ -27,18 +27,18 @@ public class TileManager {
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 
         getTileImage();
-        loadMap("/res/maps/world01.txt"); 
+        loadMap("/res/maps/world03.tmx"); 
     }
 
     public void getTileImage(){
 
-        setup(0, "blankGrass", false);
-        setup(1, "filledGrass", false);
-        setup(2, "wood", false);
-        setup(3, "stone", false);
-        setup(4, "earth", false);
-        setup(5, "tree", true);
-        setup(6, "water", true);
+        setup(1, "blankGrass", false);
+        setup(2, "filledGrass", false);
+        setup(3, "wood", false);
+        setup(4, "stone", false);
+        setup(5, "earth", false);
+        setup(6, "tree", true);
+        setup(7, "water", true);
     }
 
     public void setup(int index, String imageName, boolean collision){
@@ -62,7 +62,11 @@ public class TileManager {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             
             int col = 0;
-            int row = 0;
+            int row = 6;
+
+            for (int i = 0; i < row; i++){
+                br.readLine();
+            }
 
             while(col < gp.maxWorldCol && row < gp.maxWorldRow){
                 
@@ -70,7 +74,7 @@ public class TileManager {
                 
                 while (col < gp.maxWorldCol) {
                     
-                    String numbers[] = line.split(" ");
+                    String numbers[] = line.split(",");
 
                     int num = Integer.parseInt(numbers[col]);
 

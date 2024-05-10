@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.swing.text.NumberFormatter;
+
 public class UI {
 
     GamePanel gp;
@@ -26,6 +28,7 @@ public class UI {
     public BufferedImage currentCloseup = null;
     public int commandNum = 0;
     public int titleScreenState = 0; //0: first screen, 1: second screen
+    public double playTime;
 
     public UI(GamePanel gp){
         this.gp = gp;
@@ -66,6 +69,9 @@ public class UI {
         
         //PLAY STATE
         if(gp.gameState == gp.playState){
+            //TIME
+            playTime += (double)1/60;
+            drawTimer();
             drawPlayerLife();
         }
         //PAUSE STATE
@@ -97,6 +103,24 @@ public class UI {
         g2.setColor(Color.red);
         width = gp.tileSize * (gp.player.life / 100.0);
         g2.draw(new Line2D.Double(x, y, x + width, y));
+    }
+
+    public void drawTimer(){
+        int timeLeft = 1800 - (int)playTime;
+        int minutes = timeLeft/60;
+        int seconds = timeLeft % 60;
+        String timer = "";
+        if (minutes < 10) timer += "0" + minutes + ":";
+        else timer += minutes + ":";
+        if (seconds < 10) timer += "0" + seconds;
+        else timer += seconds;
+
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 36F));
+        int x = getXForCenteredText(timer);
+        int y = gp.tileSize;
+
+        g2.setColor(Color.white);
+        g2.drawString(timer, x, y);
     }
 
     public void drawTitleScreen(){

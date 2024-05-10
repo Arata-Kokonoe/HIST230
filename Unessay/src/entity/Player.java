@@ -1,6 +1,7 @@
 package entity;
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -36,15 +37,18 @@ public class Player extends Entity{
         hitbox.width = 24;
         hitbox.height = 32;
 
+        attackArea.width = 48;
+        attackArea.height = 36;
 
         setDefaultValues();
         getPlayerImage();
+        getPlayerAttackImage();
     }
 
     public void setDefaultValues(){
 
-        worldX = gp.tileSize * 23;
-        worldY = gp.tileSize * 21;
+        worldX = gp.tileSize * 50;
+        worldY = gp.tileSize * 50;
         speed = 4;
         direction = "right";
         leftOrRight = "right";
@@ -80,10 +84,23 @@ public class Player extends Entity{
         right2 = setup("CHS_right_2");*/
     }
 
+    public void getPlayerAttackImage(){
+
+        attackLeft1 = setup("/player/faceless_CHS_attackLeft1", 96, 48);
+        attackLeft2 = setup("/player/faceless_CHS_attackLeft2", 96, 48);
+        attackRight1 = setup("/player/faceless_CHS_attackRight1", 96, 48);
+        attackRight2 = setup("/player/faceless_CHS_attackRight2", 96, 48);
+
+    }
+
     public void update(){
 
-        if(keyH.upPressed == true || keyH.downPressed == true
-            || keyH.leftPressed == true || keyH.rightPressed == true || keyH.interactPressed == true){
+        if(attacking == true){
+            attacking();
+        }
+
+        else if(keyH.upPressed == true || keyH.downPressed == true
+                || keyH.leftPressed == true || keyH.rightPressed == true || keyH.interactPressed == true){
 
             if (keyH.upPressed == true && keyH.leftPressed == true){
                 direction = "upleft";
@@ -129,36 +146,109 @@ public class Player extends Entity{
             interactNPC(npcIndex);
 
             // CHECK ENEMY COLLISION
-            int monsterIndex = gp.cChecker.checkEntity(this, gp.enemies);
-            contactMonster(monsterIndex);
+            int enemyIndex = gp.cChecker.checkEntity(this, gp.enemies);
+            contactEnemy(enemyIndex);
 
             //CHECK EVENT COLLISION
             gp.eHandler.checkEvent();
 
             gp.keyH.interactPressed = false; //turn off interact pressed outside of check methods so it doesnt constantly turn off
 
+            /*if(enemyIndex != 999){
+                int otherCenterX = gp.enemies[enemyIndex].worldX + gp.tileSize/2;   
+                int otherCenterY = gp.enemies[enemyIndex].worldY + gp.tileSize/2;
+                int centerX = worldX + gp.tileSize/2;
+                int centerY = worldY + gp.tileSize/2;
+    
+                switch(direction){
+                    case "up": 
+                        gp.enemies[enemyIndex].worldY -= speed;
+                        if(otherCenterX > centerX) gp.enemies[enemyIndex].worldX += speed;
+                        else gp.enemies[enemyIndex].worldX -= speed;
+                        break;
+                    case "down": 
+                        gp.enemies[enemyIndex].worldY += speed;
+                        if(otherCenterX > centerX) gp.enemies[enemyIndex].worldX += speed;
+                        else gp.enemies[enemyIndex].worldX -= speed;
+                        break;
+                    case "left": 
+                        gp.enemies[enemyIndex].worldX -= speed;
+                        if(otherCenterY > centerY) gp.enemies[enemyIndex].worldY -= speed;
+                        else gp.enemies[enemyIndex].worldY += speed;
+                        break;
+                    case "right": 
+                        gp.enemies[enemyIndex].worldX += speed;
+                        if(otherCenterY > centerY) gp.enemies[enemyIndex].worldY -= speed;
+                        else gp.enemies[enemyIndex].worldY += speed;
+                        break;
+                    case "upleft": 
+                        worldY -= speed;
+                        worldX -= speed; 
+                        break;
+                    case "upright": 
+                        worldY -= speed;
+                        worldX += speed; 
+                        break;
+                    case "downleft": 
+                        worldY += speed;
+                        worldX -= speed; 
+                        break;
+                    case "downright": 
+                        worldY += speed;
+                        worldX += speed; 
+                        break;
+                    }
+            }*/
+
             //IF COLLISION IS FALSE, PLAYER CAN MOVE
             if(collisionOn == false){
                 switch(direction){
-                case "up": worldY -= speed; break;
-                case "down": worldY += speed; break;
-                case "left": worldX -= speed; break;
-                case "right": worldX += speed; break;
+                case "up": 
+                    worldY -= speed;
+                    if (enemyIndex != 999) {
+                        gp.enemies[enemyIndex].worldY -= speed; 
+                        /*if (gp.enemies[enemyIndex].worldX)
+                        int playerCenterX = (int)(gp.player.worldX + gp.player.hitbox.width/2);
+                        int playerCenterY = (int)(gp.player.worldY + gp.player.hitbox.height/2);
+                        int enemyCenterX = (int)(worldX + hitbox.width/2);
+                        int enemyCenterY = (int)(worldY + hitbox.height/2);*/
+                    }
+                    break;
+                case "down": 
+                    worldY += speed; 
+                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldY += speed; 
+                    break;
+                case "left": 
+                    worldX -= speed; 
+                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX -= speed; 
+                    break;
+                case "right": 
+                    worldX += speed; 
+                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX += speed; 
+                    break;
                 case "upleft": 
                     worldY -= speed;
                     worldX -= speed; 
+                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX -= speed; 
+                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldY -= speed; 
                     break;
                 case "upright": 
                     worldY -= speed;
                     worldX += speed; 
+                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX += speed; 
+                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldY -= speed; 
                     break;
                 case "downleft": 
                     worldY += speed;
                     worldX -= speed; 
+                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX -= speed; 
+                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldY += speed; 
                     break;
                 case "downright": 
                     worldY += speed;
                     worldX += speed; 
+                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX += speed; 
+                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldY += speed; 
                     break;
                 }
             }
@@ -236,94 +326,128 @@ public class Player extends Entity{
         }
     }
 
+    public void attacking(){
+        spriteCounter++;
+
+        if (spriteCounter <= 5){
+            spriteNum = 1;
+        }
+        if (spriteCounter > 5 && spriteCounter <= 25){
+            spriteNum = 2;
+
+            //save current worldX, worldY, solidArea
+            int currentWorldX = worldX;
+            int currentWorldY = worldY;
+            int hitboxWidth = hitbox.width;
+            int hitboxHeight = hitbox.height;
+
+            //Adjust player's worldX/Y for the attack
+            switch(leftOrRight){
+                case "left":
+                    worldX += hitbox.x - attackArea.width;
+                    break;
+                case "right":
+                    worldX += gp.tileSize - hitbox.x;
+                    break;
+            }
+
+            //player's hitbox becomes the attack hitbox
+            hitbox.width = attackArea.width;
+            hitbox.height = attackArea.height;
+
+            //check enemy collision with the updated variables
+            int enemyIndex = gp.cChecker.checkEntity(this, gp.enemies);
+            damageEnemy(enemyIndex);
+            
+            worldX = currentWorldX;
+            worldY = currentWorldY;
+            hitbox.width = hitboxWidth;
+            hitbox.height = hitboxHeight;
+
+        }
+        if (spriteCounter > 25){
+            spriteNum = 1;
+            spriteCounter = 0;
+            attacking = false;
+        }
+
+    }
+
     public void interactNPC(int i){
         if (i != 999){
-            
             if(gp.keyH.interactPressed == true){
                 gp.talkingEntity = gp.npc[i];
                 gp.gameState = gp.dialogueState;
                 gp.npc[i].speak();
             }
         }
+        else {
+            if (gp.keyH.interactPressed == true){
+                attacking = true;
+            } //if there is no npc nearby and player presses interact (space), then it attacks instead
+        }
+
+        
     }
 
-    public void contactMonster(int i){
+    public void contactEnemy(int i){
         if (i != 999){
             if(invincible == false){
-                life -= 1;
+                life -= 5;
                 invincible = true;
+            }
+        }
+    } //when player walks into enemy
+
+    public void damageEnemy(int i){
+        if (i != 999){
+            if(gp.enemies[i].invincible == false){
+                gp.enemies[i].life -= 1;
+                gp.enemies[i].invincible = true;
+
+                if(gp.enemies[i].life <= 0){
+                    gp.enemies[i] = null;
+                }
             }
         }
     }
 
     public void draw(Graphics2D g2){
+
         BufferedImage image = null;
-        switch(direction){
-            case "up":
-                if(leftOrRight == "left"){
-                    if(spriteNum == 1) image = left0;
-                    if(spriteNum == 2) image = left1;
-                    if(spriteNum == 3) image = left2;
-                    if(spriteNum == 4) image = left3;
-                }
-                if(leftOrRight == "right"){
-                    if(spriteNum == 1) image = right0;
-                    if(spriteNum == 2) image = right1;
-                    if(spriteNum == 3) image = right2;
-                    if(spriteNum == 4) image = right3;
-                }
-                break;
-            case "down":
-                if(leftOrRight == "left"){
-                    if(spriteNum == 1) image = left0;
-                    if(spriteNum == 2) image = left1;
-                    if(spriteNum == 3) image = left2;
-                    if(spriteNum == 4) image = left3;
-                }
-                if(leftOrRight == "right"){
-                    if(spriteNum == 1) image = right0;
-                    if(spriteNum == 2) image = right1;
-                    if(spriteNum == 3) image = right2;
-                    if(spriteNum == 4) image = right3;
-                }
-                break;
+        int tempScreenX = screenX;
+        int tempScreenY = screenY;
+
+        switch(leftOrRight){
             case "left":
-                if(spriteNum == 1) image = left0;
-                if(spriteNum == 2) image = left1;
-                if(spriteNum == 3) image = left2;
-                if(spriteNum == 4) image = left3;
-                break;
-            case "upleft":
-                if(spriteNum == 1) image = left0;
-                if(spriteNum == 2) image = left1;
-                if(spriteNum == 3) image = left2;
-                if(spriteNum == 4) image = left3;
-                break;
-            case "downleft":
-                if(spriteNum == 1) image = left0;
-                if(spriteNum == 2) image = left1;
-                if(spriteNum == 3) image = left2;
-                if(spriteNum == 4) image = left3;
+                if(attacking == false){
+                    if (spriteNum == 1) image = left0;
+                    else if (spriteNum == 2) image = left1;
+                    else if (spriteNum == 3) image = left2;
+                    else if (spriteNum == 4) image = left3;
+                }
+                if(attacking == true){
+                    tempScreenX = screenX - gp.tileSize;
+                    if (spriteNum == 1) image = attackLeft1;
+                    else if (spriteNum == 2) image = attackLeft2;
+                    else image = attackLeft2;
+                }
                 break;
             case "right":
-                if(spriteNum == 1) image = right0;
-                if(spriteNum == 2) image = right1;
-                if(spriteNum == 3) image = right2;
-                if(spriteNum == 4) image = right3;
-                break;
-            case "upright":
-                if(spriteNum == 1) image = right0;
-                if(spriteNum == 2) image = right1;
-                if(spriteNum == 3) image = right2;
-                if(spriteNum == 4) image = right3;
-                break;
-            case "downright":
-                if(spriteNum == 1) image = right0;
-                if(spriteNum == 2) image = right1;
-                if(spriteNum == 3) image = right2;
-                if(spriteNum == 4) image = right3;
+                if(attacking == false){
+                    if (spriteNum == 1) image = right0;
+                    else if (spriteNum == 2) image = right1;
+                    else if (spriteNum == 3) image = right2;
+                    else if (spriteNum == 4) image = right3;
+                }
+                if(attacking == true){
+                    if (spriteNum == 1) image = attackRight1;
+                    else if (spriteNum == 2) image = attackRight2;
+                    else image = attackRight2;
+                }
                 break;
         } //end of switch
+
         if (invincible == true){ //although it may seem contradictory, I use this invinvible time to signal that the player took damage (so he turns red)
             //g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
             //opacity of 0.3 (aka 70% transparent)
@@ -351,14 +475,14 @@ public class Player extends Entity{
 
 
             //finally, draw the tinted image
-            g2.drawImage(tinted, screenX, screenY, null);
+            g2.drawImage(tinted, tempScreenX, tempScreenY, null);
 
             //code to tint an image taken from https://stackoverflow.com/questions/14225518/tinting-image-in-java-improvement?noredirect=1&lq=1
             
             //later, add code for blood particles
         }
         else{
-            g2.drawImage(image, screenX, screenY, null); //draw player
+            g2.drawImage(image, tempScreenX, tempScreenY, null); //draw player
         }
         //reset alpha
         //g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));

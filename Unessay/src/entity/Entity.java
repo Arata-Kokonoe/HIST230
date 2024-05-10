@@ -1,5 +1,7 @@
 package entity;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -11,34 +13,37 @@ import main.UtilityTool;
 
 public class Entity {
    
-    public GamePanel gp;
-    public int worldX, worldY;
-    public int speed;
-
+    GamePanel gp;
     public BufferedImage left0, left1, left2, left3, right0, right1, right2, right3;
+    public BufferedImage attackLeft1, attackLeft2, attackRight1, attackRight2;
     public BufferedImage closeup;
+    public BufferedImage image;
+    public Rectangle hitbox = new Rectangle(0, 0, 48, 48);
+    public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
+    public int hitboxDefaultX, hitboxDefaultY;
+    public boolean collision = false;
+    String dialogues[] = new String[20];
+    
+    //STATE
+    public int worldX, worldY;
     public String direction = "right";
     public String leftOrRight = "right";
-
-    public int spriteCounter = 0;
     public int spriteNum = 1;
-
-    public Rectangle hitbox = new Rectangle(0, 0, 48, 48);
-    public int hitboxDefaultX, hitboxDefaultY;
-    public boolean collisionOn = false;
-
-    public int actionLockCounter;
-    public boolean invincible = false;
-    public int invincibleCounter;
-    String dialogues[] = new String[20];
     public int dialogueIndex = 0;
+    public boolean collisionOn = false;
+    public boolean invincible = false;
+    public boolean attacking = false;
 
-    public BufferedImage image;
-    public String name;
-    public boolean collision = false;
+    //COUNTER
+    public int spriteCounter = 0;
+    public int actionLockCounter;
+    public int invincibleCounter;
+    public int offscreenCounter;
+    
+    //CHARACTER ATTRIBUTE
     public int type; // 0 = player, 1= npc, 2 = enemy
-
-    //CHARACTER STATUS
+    public int speed;
+    public String name;
     public int maxLife;
     public int life;
 
@@ -128,6 +133,17 @@ public class Entity {
             }
             spriteCounter = 0;
         }
+
+        if(invincible == true){
+            invincibleCounter++;
+            System.out.println("this enemy is invincible");
+            if(invincibleCounter > 40){
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
+
+
     }
     
     public void draw(Graphics2D g2){
@@ -141,73 +157,52 @@ public class Entity {
            worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
            worldY - gp.tileSize < gp.player.worldY + gp.player.screenY){
 
-            switch(direction){
-                case "up":
-                    if(leftOrRight == "left"){
-                        if(spriteNum == 1) image = left0;
-                        if(spriteNum == 2) image = left1;
-                        if(spriteNum == 3) image = left2;
-                        if(spriteNum == 4) image = left3;
-                    }
-                    if(leftOrRight == "right"){
-                        if(spriteNum == 1) image = right0;
-                        if(spriteNum == 2) image = right1;
-                        if(spriteNum == 3) image = right2;
-                        if(spriteNum == 4) image = right3;
-                    }
-                    break;
-                case "down":
-                    if(leftOrRight == "left"){
-                        if(spriteNum == 1) image = left0;
-                        if(spriteNum == 2) image = left1;
-                        if(spriteNum == 3) image = left2;
-                        if(spriteNum == 4) image = left3;
-                    }
-                    if(leftOrRight == "right"){
-                        if(spriteNum == 1) image = right0;
-                        if(spriteNum == 2) image = right1;
-                        if(spriteNum == 3) image = right2;
-                        if(spriteNum == 4) image = right3;
-                    }
-                    break;
+            switch(leftOrRight){
                 case "left":
-                    if(spriteNum == 1) image = left0;
-                    if(spriteNum == 2) image = left1;
-                    if(spriteNum == 3) image = left2;
-                    if(spriteNum == 4) image = left3;
-                    break;
-                case "upleft":
-                    if(spriteNum == 1) image = left0;
-                    if(spriteNum == 2) image = left1;
-                    if(spriteNum == 3) image = left2;
-                    if(spriteNum == 4) image = left3;
-                    break;
-                case "downleft":
-                    if(spriteNum == 1) image = left0;
-                    if(spriteNum == 2) image = left1;
-                    if(spriteNum == 3) image = left2;
-                    if(spriteNum == 4) image = left3;
+                    if (spriteNum == 1) image = left0;
+                    else if (spriteNum == 2) image = left1;
+                    else if (spriteNum == 3) image = left2;
+                    else if (spriteNum == 4) image = left3;
                     break;
                 case "right":
-                    if(spriteNum == 1) image = right0;
-                    if(spriteNum == 2) image = right1;
-                    if(spriteNum == 3) image = right2;
-                    if(spriteNum == 4) image = right3;
+                    if (spriteNum == 1) image = right0;
+                    else if (spriteNum == 2) image = right1;
+                    else if (spriteNum == 3) image = right2;
+                    else if (spriteNum == 4) image = right3;
                     break;
-                case "upright":
-                    if(spriteNum == 1) image = right0;
-                    if(spriteNum == 2) image = right1;
-                    if(spriteNum == 3) image = right2;
-                    if(spriteNum == 4) image = right3;
-                    break;
-                case "downright":
-                    if(spriteNum == 1) image = right0;
-                    if(spriteNum == 2) image = right1;
-                    if(spriteNum == 3) image = right2;
-                    if(spriteNum == 4) image = right3;
-                    break;
-            }
-            g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            } //end of switch
+
+            if (invincible == true){
+                //first, generate mask
+                int imgWidth = image.getWidth();
+                int imgHeight = image.getHeight();
+
+                BufferedImage imgMask = new BufferedImage(imgWidth, imgHeight, BufferedImage.TRANSLUCENT);
+                Graphics2D g1 = imgMask.createGraphics();
+
+                g1.drawImage(image, 0, 0, null);
+                g1.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 0.5f));
+                g1.setColor(Color.red);
+
+                g1.fillRect(0, 0, image.getWidth(), image.getHeight());
+                g1.dispose();
+
+                //then, generate tinted image
+                BufferedImage tinted = new BufferedImage(imgWidth, imgHeight, BufferedImage.TRANSLUCENT);
+                Graphics2D g3 = tinted.createGraphics();
+                g3.drawImage(image, 0, 0, null);
+                g3.drawImage(imgMask, 0, 0, null);
+                g3.dispose();
+
+
+                //finally, draw the tinted image
+                g2.drawImage(tinted, screenX, screenY, null);
+
+                //code to tint an image taken from https://stackoverflow.com/questions/14225518/tinting-image-in-java-improvement?noredirect=1&lq=1
+                
+                //later, add code for blood particles
+            } 
+            else {g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);}
         }
     }
 
@@ -243,4 +238,14 @@ public class Entity {
         return image;
     }
 
+    public boolean checkOffscreen(){
+        if(!(worldX + gp.tileSize > gp.player.worldX - gp.player.screenX &&
+           worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
+           worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
+           worldY - gp.tileSize < gp.player.worldY + gp.player.screenY)){
+            offscreenCounter++;
+        }
+        if(offscreenCounter == 300) return true;
+        else return false;
+    }
 }
