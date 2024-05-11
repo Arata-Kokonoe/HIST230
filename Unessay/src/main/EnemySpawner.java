@@ -27,7 +27,7 @@ public class EnemySpawner {
         int freeIndex = checkEnemyArr();
         spawnTimer++;
 
-        if(spawnTimer == 600/difficulty && freeIndex != -1){
+        if(spawnTimer == 100/difficulty && freeIndex != -1){
             gp.enemies[freeIndex] = new ENE_sanCulotte(gp);
 
             int x, y;

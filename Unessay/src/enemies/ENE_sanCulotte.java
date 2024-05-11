@@ -19,8 +19,10 @@ public class ENE_sanCulotte extends Entity{
         direction = "right";
         leftOrRight = "right";
         speed = 1;
-        maxLife = 5;
+        maxLife = 2;
         life = maxLife;
+        attack = 5;
+        defense = 0;
 
         hitbox.x = 12;
         hitbox.y = 12;

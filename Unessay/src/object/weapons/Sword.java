@@ -1,4 +1,4 @@
-package weapons;
+package object.weapons;
 
 import java.awt.image.BufferedImage;
 

@@ -32,6 +32,7 @@ public class TileManager {
 
     public void getTileImage(){
 
+        setup(0, "black", false);
         setup(1, "blankGrass", false);
         setup(2, "filledGrass", false);
         setup(3, "wood", false);

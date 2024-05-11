@@ -54,6 +54,7 @@ public class GamePanel extends JPanel implements Runnable{
     public Entity obj[] = new Entity[10];
     public Entity npc[] = new Entity[10];
     public Entity enemies[] = new Entity[100];
+    public Entity exp[] = new Entity[300];
     public Entity talkingEntity;
     ArrayList<Entity> entityList = new ArrayList<>();
 
@@ -64,7 +65,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int playState = 1;
     public final int pauseState = 2;
     public final int dialogueState = 3;
-
+    public final int characterState = 4;
 
 
     public GamePanel(){
@@ -174,10 +175,12 @@ public class GamePanel extends JPanel implements Runnable{
             for(int i = 0; i < enemies.length; i++){
                 if(enemies[i] != null){
                     if(enemies[i].checkOffscreen()){
-                        enemies[i] = null;
-                        if (eSpawner.spawnEnemyFast() != -1) enemies[i].update();;
+                        enemies[i].alive = false;
+                        enemies[i].dying = false;
+                        eSpawner.spawnEnemyFast();
                     }
-                    else enemies[i].update();
+                    if (enemies[i].alive == true && enemies[i].dying == false){enemies[i].update();}
+                    if (enemies[i].alive == false){enemies[i] = null;}
                 }
             }
         }
@@ -276,6 +279,15 @@ public class GamePanel extends JPanel implements Runnable{
     public void playSE(int i){
         se.setFile(i);
         se.play();
+    }
+
+    public void loopSE(int i){
+        se.setFile(i);
+        se.loop();
+    }
+
+    public void stopSE(){
+        se.stop();
     }
 
 

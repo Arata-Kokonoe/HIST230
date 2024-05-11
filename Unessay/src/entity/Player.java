@@ -11,6 +11,8 @@ import java.nio.Buffer;
 
 import main.GamePanel;
 import main.KeyHandler;
+import object.OBJ_Shield;
+import object.OBJ_Sword_Normal;
 
 public class Player extends Entity{
 
@@ -18,6 +20,8 @@ public class Player extends Entity{
 
     public final int screenX;
     public final int screenY;
+    public int standCounter;
+    public boolean attackCanceled = false;
 
     //public int hasKey = 0;
 
@@ -54,8 +58,26 @@ public class Player extends Entity{
         leftOrRight = "right";
 
         //PLAYER STATUS
+        level = 1;
         maxLife = 100;
         life = maxLife;
+        strength = 1;
+        dexterity = 1;
+        exp = 0;
+        nextLevelExp = 5;
+        coin = 0;
+        currentWeapon = new OBJ_Sword_Normal(gp);
+        currentShield = new OBJ_Shield(gp);
+        attack = getAttack(); //total attack value determined by strength * weaponValue
+        defense = getDefense(); //total defense value determined by dexterity * shieldValue
+    }
+
+    public int getAttack(){
+        return strength * currentWeapon.attackValue;
+    }
+
+    public int getDefense(){
+        return dexterity * currentShield.defenseValue;
     }
 
     public void getPlayerImage(){
@@ -152,8 +174,6 @@ public class Player extends Entity{
             //CHECK EVENT COLLISION
             gp.eHandler.checkEvent();
 
-            gp.keyH.interactPressed = false; //turn off interact pressed outside of check methods so it doesnt constantly turn off
-
             /*if(enemyIndex != 999){
                 int otherCenterX = gp.enemies[enemyIndex].worldX + gp.tileSize/2;   
                 int otherCenterY = gp.enemies[enemyIndex].worldY + gp.tileSize/2;
@@ -201,7 +221,7 @@ public class Player extends Entity{
             }*/
 
             //IF COLLISION IS FALSE, PLAYER CAN MOVE
-            if(collisionOn == false){
+            if(collisionOn == false && keyH.interactPressed != true){
                 switch(direction){
                 case "up": 
                     worldY -= speed;
@@ -253,6 +273,15 @@ public class Player extends Entity{
                 }
             }
 
+            if(keyH.interactPressed == true && attackCanceled == false){
+                gp.playSE(7);
+                attacking = true;
+                spriteCounter = 0;
+            }
+
+            attackCanceled = false;
+            gp.keyH.interactPressed = false; //turn off interact pressed outside of check methods so it doesnt constantly turn off
+
             spriteCounter++;
             if(spriteCounter > 12){
                 if(spriteNum == 1){
@@ -268,6 +297,13 @@ public class Player extends Entity{
                     spriteNum = 1;
                 }
                 spriteCounter = 0;
+            }
+        }
+        else {
+            standCounter++;
+            if(standCounter == 20){
+                spriteNum = 1;
+                standCounter = 0;
             }
         }
         //This needs to be outside of key if statement
@@ -287,6 +323,7 @@ public class Player extends Entity{
         gp.keyH.interactPressed = false; 
         System.out.println("interactPressed = false");
     }
+
     public void pickUpObject(int i){
         
         if(i != 999){
@@ -376,24 +413,24 @@ public class Player extends Entity{
     public void interactNPC(int i){
         if (i != 999){
             if(gp.keyH.interactPressed == true){
+                attackCanceled = true;
                 gp.talkingEntity = gp.npc[i];
                 gp.gameState = gp.dialogueState;
                 gp.npc[i].speak();
             }
-        }
-        else {
-            if (gp.keyH.interactPressed == true){
-                attacking = true;
-            } //if there is no npc nearby and player presses interact (space), then it attacks instead
-        }
-
+        } //if there is no npc nearby and player presses interact (space), then it attacks instead
         
     }
 
     public void contactEnemy(int i){
         if (i != 999){
-            if(invincible == false){
-                life -= 5;
+            if(invincible == false && gp.enemies[i].alive == true && gp.enemies[i].dying == false){
+                gp.playSE(5);
+
+                int damage = gp.enemies[i].attack - defense;
+                if(damage < 0) damage = 0;
+
+                life -= damage;
                 invincible = true;
             }
         }
@@ -401,12 +438,21 @@ public class Player extends Entity{
 
     public void damageEnemy(int i){
         if (i != 999){
-            if(gp.enemies[i].invincible == false){
-                gp.enemies[i].life -= 1;
+            if(gp.enemies[i].invincible == false && gp.enemies[i].dying == false){
+                
+                gp.playSE(5);
+
+                int damage = attack - gp.enemies[i].defense;
+                if(damage < 0) damage = 0;
+
+                gp.enemies[i].life -= damage;
+                gp.ui.addMessage(damage + " damage!");
+                
                 gp.enemies[i].invincible = true;
 
                 if(gp.enemies[i].life <= 0){
-                    gp.enemies[i] = null;
+                    gp.enemies[i].dying = true;
+                    gp.ui.addMessage("killed the " + gp.enemies[i].name + "!");
                 }
             }
         }
@@ -476,12 +522,12 @@ public class Player extends Entity{
 
             //finally, draw the tinted image
             g2.drawImage(tinted, tempScreenX, tempScreenY, null);
-
             //code to tint an image taken from https://stackoverflow.com/questions/14225518/tinting-image-in-java-improvement?noredirect=1&lq=1
             
             //later, add code for blood particles
         }
         else{
+            changeAlpha(g2, 1f);
             g2.drawImage(image, tempScreenX, tempScreenY, null); //draw player
         }
         //reset alpha

@@ -33,12 +33,15 @@ public class Entity {
     public boolean collisionOn = false;
     public boolean invincible = false;
     public boolean attacking = false;
+    public boolean alive = true;
+    public boolean dying = false;
 
     //COUNTER
     public int spriteCounter = 0;
-    public int actionLockCounter;
-    public int invincibleCounter;
-    public int offscreenCounter;
+    public int actionLockCounter = 0;
+    public int invincibleCounter = 0;
+    public int offscreenCounter = 0;
+    int dyingCounter = 0;
     
     //CHARACTER ATTRIBUTE
     public int type; // 0 = player, 1= npc, 2 = enemy
@@ -46,6 +49,20 @@ public class Entity {
     public String name;
     public int maxLife;
     public int life;
+    public int level;
+    public int strength;
+    public int dexterity;
+    public int attack;
+    public int defense;
+    public int exp;
+    public int nextLevelExp;
+    public int coin;
+    public Entity currentWeapon;
+    public Entity currentShield;
+
+    //ITEM ATTRIBUTE
+    public int attackValue;
+    public int defenseValue;
 
     public Entity (GamePanel gp){
         this.gp = gp;
@@ -85,9 +102,13 @@ public class Entity {
         gp.cChecker.checkEntity(this, gp.enemies);
         boolean contactPlayer = gp.cChecker.checkPlayer(this);
 
-        if(this.type == 2 && contactPlayer == true){
+        if(this.type == 2 && contactPlayer == true && alive == true && dying == false){
             if(gp.player.invincible == false){
-                gp.player.life -=5;
+                gp.playSE(5);
+                int damage = attack - gp.player.defense;
+                if(damage < 0) damage = 0;
+
+                gp.player.life -= damage;
                 gp.player.invincible = true;
             }
         }
@@ -136,7 +157,6 @@ public class Entity {
 
         if(invincible == true){
             invincibleCounter++;
-            System.out.println("this enemy is invincible");
             if(invincibleCounter > 40){
                 invincible = false;
                 invincibleCounter = 0;
@@ -172,7 +192,7 @@ public class Entity {
                     break;
             } //end of switch
 
-            if (invincible == true){
+            if (invincible == true && dying != true){
                 //first, generate mask
                 int imgWidth = image.getWidth();
                 int imgHeight = image.getHeight();
@@ -202,8 +222,56 @@ public class Entity {
                 
                 //later, add code for blood particles
             } 
-            else {g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);}
+            
+            else if (dying == true){
+                dyingAnimation(g2);
+                g2.drawImage(image, screenX, screenY, null);
+            }
+            else {
+                changeAlpha(g2, 1f);
+                g2.drawImage(image, screenX, screenY, null);
+            }
         }
+    }
+
+    public void dyingAnimation(Graphics2D g2){
+        dyingCounter++;
+
+        int i = 5;
+
+        //switch sprites instead of changing alpha if you want better animation
+        if(dyingCounter <= i){
+            changeAlpha(g2, 0f);
+        }
+        if(dyingCounter > i && dyingCounter <= i*2){
+            changeAlpha(g2, 1f);
+        }
+        if(dyingCounter > i*2 && dyingCounter <= i*3){
+            changeAlpha(g2, 0f);
+        }
+        if(dyingCounter > i*3 && dyingCounter <= i*4){
+            changeAlpha(g2, 1f);
+        }
+        if(dyingCounter > i*4 && dyingCounter <= i*5){
+            changeAlpha(g2, 0f);
+        }
+        if(dyingCounter > i*5 && dyingCounter <= i*6){
+            changeAlpha(g2, 1f);
+        }
+        if(dyingCounter > i*6 && dyingCounter <= i*7){
+            changeAlpha(g2, 0f);
+        }
+        if(dyingCounter > i*7 && dyingCounter <= i*8){
+            changeAlpha(g2, 1f);
+        }
+        if(dyingCounter > i*8){
+            dying = false;
+            alive = false;
+        }
+    }
+
+    public void changeAlpha(Graphics2D g2, float alphaValue){
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue));
     }
 
     public BufferedImage setup(String imagePath){
