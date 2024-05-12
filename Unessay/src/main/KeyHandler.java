@@ -10,6 +10,7 @@ public class KeyHandler implements KeyListener{
     public boolean upPressed, downPressed, leftPressed, rightPressed, interactPressed;
     // DEBUG
     boolean checkDrawTime = false;
+    UtilityTool utool = new UtilityTool();
 
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -37,6 +38,9 @@ public class KeyHandler implements KeyListener{
 
         //CHARACTER STATE
         else if (gp.gameState == gp.characterState){characterState(code);}
+
+        //LEVELUP STATE
+        else if (gp.gameState == gp.levelupState) levelupState(code);
     }
 
     public void titleState(int code){
@@ -138,6 +142,42 @@ public class KeyHandler implements KeyListener{
     public void characterState(int code){
         if(code == KeyEvent.VK_C){
             gp.gameState = gp.playState;
+        }
+    }
+
+    public void levelupState(int code){
+        if(code == KeyEvent.VK_W || code == KeyEvent.VK_UP){
+            if(gp.ui.slotRow != 0){
+                gp.ui.slotRow -= 3;
+                gp.ui.upgradeNum--;
+                System.out.println("upgradeNum = " + gp.ui.upgradeNum);
+                gp.playSE(9);
+            }
+        }    
+        if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN){
+            if(gp.ui.slotRow != 9){
+                if (gp.ui.slotRow == 6 && gp.player.luck < 1){
+                    System.out.println("not enough luck");
+                }
+                else{
+                    gp.ui.slotRow += 3;
+                    gp.ui.upgradeNum++;
+                    System.out.println("upgradeNum = " + gp.ui.upgradeNum);
+                    gp.playSE(9);
+                }
+            }
+        }      
+        if(code == KeyEvent.VK_SPACE){
+            if(gp.player.upgradeChoices[gp.ui.upgradeNum].itemType == 0){
+                int i = utool.checkEntityArr(gp.player.currentPassives);
+                gp.player.currentPassives[i] = gp.player.upgradeChoices[gp.ui.upgradeNum];
+            }
+            else if(gp.player.upgradeChoices[gp.ui.upgradeNum].itemType == 1){
+                int i = utool.checkEntityArr(gp.player.currentWeapons);
+                gp.player.currentWeapons[i] = gp.player.upgradeChoices[gp.ui.upgradeNum];
+            }
+            gp.gameState = gp.playState;
+            gp.player.applyPassives();
         }
     }
 

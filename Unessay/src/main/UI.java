@@ -32,8 +32,11 @@ public class UI {
     public String currentDialogue = "";
     public BufferedImage currentCloseup = null;
     public int commandNum = 0;
+    public int upgradeNum = 0;
     public int titleScreenState = 0; //0: first screen, 1: second screen
     public double playTime;
+    public int slotCol = 0;
+    public int slotRow = 0;
 
     public UI(GamePanel gp){
         this.gp = gp;
@@ -96,6 +99,10 @@ public class UI {
         //CHARACTER STATE
         if(gp.gameState == gp.characterState){
             drawCharacterScreen();
+        }
+        //LEVELUP STATE
+        if(gp.gameState == gp.levelupState){
+            drawLevelupScreen();
         }
     }
 
@@ -297,6 +304,21 @@ public class UI {
             y += 40;
         }
 
+        g2.setFont(g2.getFont().deriveFont(Font.ITALIC, 12F));
+        String subText = "Esc to close dialogue window.";
+        x = getXForAlignToRightText(subText, gp.tileSize*2 + width - 10);
+        y = gp.tileSize/2 + height - 20;
+        utool.changeAlpha(g2, 0.4f);
+        g2.drawString(subText, x, y);
+        utool.changeAlpha(g2, 1f);
+
+        subText = "Space to continue dialogue.";
+        x = getXForAlignToRightText(subText, gp.tileSize*2 + width - 10);
+        y += 10;
+        utool.changeAlpha(g2, 0.4f);
+        g2.drawString(subText, x, y);
+        utool.changeAlpha(g2, 1f);
+
     }
     
     public void drawCharacterScreen(){
@@ -320,13 +342,11 @@ public class UI {
         textY += lineHeight;
         g2.drawString("Life", textX, textY);
         textY += lineHeight;
-        g2.drawString("Strength", textX, textY);
+        g2.drawString("Damage Multiplier", textX, textY);
         textY += lineHeight;
-        g2.drawString("Dexterity", textX, textY);
+        g2.drawString("Damage Reduction", textX, textY);
         textY += lineHeight;
-        g2.drawString("Attack", textX, textY);
-        textY += lineHeight;
-        g2.drawString("Defense", textX, textY);
+        g2.drawString("Luck", textX, textY);
         textY += lineHeight;
         g2.drawString("Exp", textX, textY);
         textY += lineHeight;
@@ -334,10 +354,6 @@ public class UI {
         textY += lineHeight;
         g2.drawString("Coin", textX, textY);
         textY += lineHeight + 20;
-        g2.drawString("Weapon", textX, textY);
-        textY += lineHeight + 15;
-        g2.drawString("Shield", textX, textY);
-        textY += lineHeight;
 
         //VALUES
         int tailX = (frameX + frameWidth) - 30;
@@ -355,22 +371,17 @@ public class UI {
         g2.drawString(value, textX, textY);
         textY += lineHeight;
 
-        value = String.valueOf(gp.player.strength);
-        textX = getXForAlignToRightText(value, tailX);
-        g2.drawString(value, textX, textY);
-        textY += lineHeight;
-    
-        value = String.valueOf(gp.player.dexterity);
+        value = String.valueOf(gp.player.damageMultiplier);
         textX = getXForAlignToRightText(value, tailX);
         g2.drawString(value, textX, textY);
         textY += lineHeight;
 
-        value = String.valueOf(gp.player.attack);
+        value = String.valueOf(gp.player.damageReduction);
         textX = getXForAlignToRightText(value, tailX);
         g2.drawString(value, textX, textY);
         textY += lineHeight;
 
-        value = String.valueOf(gp.player.defense);
+        value = String.valueOf(gp.player.luck);
         textX = getXForAlignToRightText(value, tailX);
         g2.drawString(value, textX, textY);
         textY += lineHeight;
@@ -390,9 +401,65 @@ public class UI {
         g2.drawString(value, textX, textY);
         textY += lineHeight;
 
-        g2.drawImage(gp.player.currentWeapon.right0, tailX - gp.tileSize, textY-14, null);
-        textY += gp.tileSize;
-        g2.drawImage(gp.player.currentShield.right0, tailX - gp.tileSize, textY-9, null);
+    }
+
+    public void drawLevelupScreen(){
+
+        //frame
+        int frameX = gp.tileSize*4;
+        int frameY = gp.tileSize - 12;
+        int frameWidth = gp.tileSize*12;
+        int frameHeight = gp.tileSize*13;
+        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
+
+        //slot
+        final int slotXstart = frameX + 24;
+        final int slotYstart = frameY + 20;
+        final int iconSize = (int)(gp.tileSize*2.5);
+        int slotY = slotYstart;
+
+        //DRAW UPGRADE CHOIES
+        g2.setColor(Color.white);
+        
+        for (int i = 0; i < gp.player.upgradeChoices.length; i++){
+            if(gp.player.upgradeChoices[i] != null){
+                g2.drawImage(utool.scaleImage(gp.player.upgradeChoices[i].icon, iconSize, iconSize), slotXstart + 10, slotY + 10, null);
+
+                g2.setFont(g2.getFont().deriveFont(Font.BOLD, 30F));
+                g2.drawString(gp.player.upgradeChoices[i].name, getXForCenteredText(gp.player.upgradeChoices[i].name, slotXstart + gp.tileSize*3, frameX + frameWidth - 35), slotY + 30);
+                slotY += gp.tileSize;
+
+                g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 18F));
+                int y = slotY;
+                for(String line : gp.player.upgradeChoices[i].description.split("\n")){
+                    g2.drawString(line, slotXstart + gp.tileSize*3 + 5, y);
+                    y += 20;
+                }
+                slotY += gp.tileSize*2;
+            }
+        }
+
+        //CURSOR
+        int cursorX = slotXstart + (gp.tileSize * slotCol);
+        int cursorY = slotYstart + (gp.tileSize * slotRow);
+        int cursorWidth = gp.tileSize*11;
+        int cursorHeight = gp.tileSize*3;
+
+        if(gp.player.luck < 1){
+            g2.setColor(Color.black);
+            g2.fillRoundRect(cursorX, slotY, cursorWidth, cursorHeight, 10, 10);
+            slotY+=(int)(gp.tileSize*1.5);
+            g2.setColor(Color.white);
+            g2.setFont(g2.getFont().deriveFont(Font.BOLD, 24F));
+            g2.drawString("Increase your luck to unlock more choices.", getXForCenteredText("Increase your luck to unlock more choices.", cursorX, cursorX + cursorWidth), slotY);
+        }
+
+        
+
+        //DRAW CURSOR
+        g2.setColor(Color.white);
+        g2.setStroke(new BasicStroke(3));
+        g2.drawRoundRect(cursorX, cursorY, cursorWidth, cursorHeight, 10, 10);
     }
 
     public void drawSubWindow(int x, int y, int width, int height){
@@ -406,7 +473,7 @@ public class UI {
             g2.drawRoundRect(x+5, y+5, width-10, height-10, 25, 25);
 
         if(currentCloseup != null){
-            g2.drawImage(utool.scaleImage(currentCloseup, 144, 144), null, x+25, y+25);
+            g2.drawImage(utool.scaleImage(currentCloseup, 144, 144), x+25, y+25, null);
             g2.drawRoundRect(x+25, y+25, gp.tileSize*3, gp.tileSize*3, 15, 15);
         }
     }
@@ -415,6 +482,13 @@ public class UI {
 
         int length = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
         int x = gp.screenWidth/2 - length/2;
+        return x;
+    }
+
+    public int getXForCenteredText(String text, int x1, int x2){
+
+        int length = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
+        int x = ((x2-x1)/2) + x1 - length/2;
         return x;
     }
 

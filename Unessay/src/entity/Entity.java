@@ -16,7 +16,7 @@ public class Entity {
     GamePanel gp;
     public BufferedImage left0, left1, left2, left3, right0, right1, right2, right3;
     public BufferedImage attackLeft1, attackLeft2, attackRight1, attackRight2;
-    public BufferedImage closeup;
+    public BufferedImage icon;
     public BufferedImage image;
     public Rectangle hitbox = new Rectangle(0, 0, 48, 48);
     public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
@@ -25,7 +25,8 @@ public class Entity {
     String dialogues[] = new String[20];
     
     //STATE
-    public int worldX, worldY;
+    public int worldX;
+    public int worldY;
     public String direction = "right";
     public String leftOrRight = "right";
     public int spriteNum = 1;
@@ -35,6 +36,7 @@ public class Entity {
     public boolean attacking = false;
     public boolean alive = true;
     public boolean dying = false;
+    public boolean applied = false;
 
     //COUNTER
     public int spriteCounter = 0;
@@ -50,19 +52,18 @@ public class Entity {
     public int maxLife;
     public int life;
     public int level;
-    public int strength;
-    public int dexterity;
-    public int attack;
-    public int defense;
+    public int damageMultiplier;
+    public int damage;
+    public double damageReduction;
     public int exp;
     public int nextLevelExp;
     public int coin;
-    public Entity currentWeapon;
-    public Entity currentShield;
+    public int luck;
 
     //ITEM ATTRIBUTE
-    public int attackValue;
-    public int defenseValue;
+    public int itemType;
+    public String description;
+    public double size = 1.0;
 
     public Entity (GamePanel gp){
         this.gp = gp;
@@ -78,7 +79,7 @@ public class Entity {
             return;
         }
         gp.ui.currentDialogue = dialogues[dialogueIndex];
-        gp.ui.currentCloseup = closeup;
+        gp.ui.currentCloseup = icon;
 
         dialogueIndex++;
 
@@ -104,13 +105,19 @@ public class Entity {
 
         if(this.type == 2 && contactPlayer == true && alive == true && dying == false){
             if(gp.player.invincible == false){
-                gp.playSE(5);
-                int damage = attack - gp.player.defense;
-                if(damage < 0) damage = 0;
+                //gp.playSE(5);
+                double incomingDamage = damage * (1-gp.player.damageReduction);
+                if(incomingDamage < 0) incomingDamage = 0;
 
-                gp.player.life -= damage;
+                gp.player.life -= incomingDamage;
                 gp.player.invincible = true;
             }
+        }
+
+        if(this.type == 3 && contactPlayer == true){
+            gp.player.exp++;
+            gp.player.checkLevelUp();
+            this.alive = false;
         }
 
         if(collisionOn == false){
@@ -136,6 +143,7 @@ public class Entity {
                 worldX += speed; 
                 break;
             }
+
         }
 
         spriteCounter++;
@@ -230,6 +238,10 @@ public class Entity {
             else {
                 changeAlpha(g2, 1f);
                 g2.drawImage(image, screenX, screenY, null);
+
+                //DEBUG
+                g2.setColor(Color.red);
+                g2.drawRect(screenX + 12, screenY + 12, 29, 41);
             }
         }
     }
@@ -315,5 +327,12 @@ public class Entity {
         }
         if(offscreenCounter == 300) return true;
         else return false;
+    }
+
+    public void addEffect(){
+        System.out.println("this entity has no effect, overwrite method");
+    }
+    public void attack(){
+        System.out.println("this entity has no attack, overwrite method");
     }
 }

@@ -3,31 +3,26 @@ package main;
 import java.util.Random;
 
 import enemies.ENE_sanCulotte;
+import entity.Entity;
+import object.OBJ_Exp_Crystal;
 
 public class EnemySpawner {
 
     GamePanel gp;
     int maxEnemies, difficulty, spawnTimer; //maybe implement scaling based on difficulty later
+    UtilityTool utool = new UtilityTool();
 
     public EnemySpawner(GamePanel gp){
         this.gp = gp;
-        maxEnemies = 10;
         difficulty = 1;
     }
 
-    public int checkEnemyArr(){
-        for (int i = 0; i < maxEnemies; i++){
-            if (gp.enemies[i] == null) return i; //find and return empty index in enemy array
-        }
-
-        return -1;  //if none, return -1
-    }
-
-    public int spawnEnemy(){
-        int freeIndex = checkEnemyArr();
+    public int spawnEnemy(){//spawns an enemy if a certain amount of frames have passed, can change based on difficulty
+        //spawns an enemy slightly offscreen based on direction player is moving
+        int freeIndex = utool.checkEntityArr(gp.enemies);
         spawnTimer++;
 
-        if(spawnTimer == 100/difficulty && freeIndex != -1){
+        if(spawnTimer >= 100/difficulty && freeIndex != -1){
             gp.enemies[freeIndex] = new ENE_sanCulotte(gp);
 
             int x, y;
@@ -123,8 +118,8 @@ public class EnemySpawner {
         return -1;
     }
 
-    public int spawnEnemyFast(){
-        int freeIndex = checkEnemyArr();
+    public int spawnEnemyFast(){ //same as spawnEnemy but without the spawnTimer
+        int freeIndex = utool.checkEntityArr(gp.enemies);
 
         if(freeIndex != -1){
             gp.enemies[freeIndex] = new ENE_sanCulotte(gp);
@@ -219,6 +214,16 @@ public class EnemySpawner {
             return freeIndex;
         }
         return -1;
+    }
+
+    public void spawnExp(int x, int y){ //creates exp crystal, takes x and y position parameters
+        int freeIndex = utool.checkEntityArr(gp.obj);
+
+        if (freeIndex != -1){
+            gp.obj[freeIndex] = new OBJ_Exp_Crystal(gp);
+            gp.obj[freeIndex].worldX = x + 18;
+            gp.obj[freeIndex].worldY = y + 36;
+        }
     }
 
 }

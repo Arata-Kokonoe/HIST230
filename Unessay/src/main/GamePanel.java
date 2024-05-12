@@ -29,8 +29,8 @@ public class GamePanel extends JPanel implements Runnable{
     public final int screenHeight = tileSize * maxScreenRow;   // 576 pixels
 
     // World Settings
-    public final int maxWorldCol = 100;
-    public final int maxWorldRow = 100;
+    public final int maxWorldCol = 150;
+    public final int maxWorldRow = 150;
     //public final int worldWidth = tileSize * maxWorldCol;
     //public final int worldHeight = tileSize * maxWorldRow;
 
@@ -40,6 +40,7 @@ public class GamePanel extends JPanel implements Runnable{
     //SYSTEM
     TileManager tileM = new TileManager(this);
     public KeyHandler keyH = new KeyHandler(this);
+    public ItemHandler itemH = new ItemHandler(this);
     Sound music = new Sound();
     Sound se = new Sound();
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -51,12 +52,11 @@ public class GamePanel extends JPanel implements Runnable{
     
     //ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
-    public Entity obj[] = new Entity[10];
+    public Entity obj[] = new Entity[100];
     public Entity npc[] = new Entity[10];
-    public Entity enemies[] = new Entity[100];
-    public Entity exp[] = new Entity[300];
+    public Entity enemies[] = new Entity[10];
     public Entity talkingEntity;
-    ArrayList<Entity> entityList = new ArrayList<>();
+    public ArrayList<Entity> entityList = new ArrayList<>();
 
 
     // GAME STATE
@@ -66,6 +66,7 @@ public class GamePanel extends JPanel implements Runnable{
     public final int pauseState = 2;
     public final int dialogueState = 3;
     public final int characterState = 4;
+    public final int levelupState = 5;
 
 
     public GamePanel(){
@@ -163,6 +164,14 @@ public class GamePanel extends JPanel implements Runnable{
             // PLAYER
             player.update();
 
+            //EXP AND OBJECTS
+            for(int i = 0; i < obj.length; i++){
+                if(obj[i] != null){
+                    if(obj[i].alive == true) obj[i].update();
+                    if(obj[i].alive == false) obj[i] = null;
+                }
+            }
+
             // NPC
             for(int i = 0; i < npc.length; i++){
                 if (npc[i] != null){
@@ -183,6 +192,7 @@ public class GamePanel extends JPanel implements Runnable{
                     if (enemies[i].alive == false){enemies[i] = null;}
                 }
             }
+            
         }
         if(gameState == pauseState){
             //nothing for now...

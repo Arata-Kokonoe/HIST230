@@ -27,12 +27,12 @@ public class TileManager {
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 
         getTileImage();
-        loadMap("/res/maps/world03.tmx"); 
+        loadMap("/res/maps/world04.tmx"); 
     }
 
     public void getTileImage(){
 
-        setup(0, "black", false);
+        setup(0, "blankGrass", false);
         setup(1, "blankGrass", false);
         setup(2, "filledGrass", false);
         setup(3, "wood", false);

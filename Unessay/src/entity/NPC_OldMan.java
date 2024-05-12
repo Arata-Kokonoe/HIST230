@@ -27,7 +27,7 @@ public class NPC_OldMan extends Entity{
         right1 = setup("/npc/CHS_right_2");
         right2 = setup("/npc/CHS_right_1");
         right3 = setup("/npc/CHS_right_2");
-        closeup = setup("/npc/CHS_closeup", gp.tileSize*3, gp.tileSize*3);
+        icon = setup("/npc/CHS_closeup", gp.tileSize*3, gp.tileSize*3);
 
     }
 

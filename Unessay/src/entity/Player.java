@@ -8,11 +8,13 @@ import java.awt.Rectangle;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.nio.Buffer;
+import java.util.ArrayList;
+import java.util.Random;
 
+import items.Sword;
 import main.GamePanel;
+import main.ItemHandler;
 import main.KeyHandler;
-import object.OBJ_Shield;
-import object.OBJ_Sword_Normal;
 
 public class Player extends Entity{
 
@@ -22,6 +24,10 @@ public class Player extends Entity{
     public final int screenY;
     public int standCounter;
     public boolean attackCanceled = false;
+    public Entity[] upgradeChoices;
+
+    public Entity[] currentWeapons;
+    public Entity[] currentPassives;
 
     //public int hasKey = 0;
 
@@ -51,33 +57,69 @@ public class Player extends Entity{
 
     public void setDefaultValues(){
 
-        worldX = gp.tileSize * 50;
-        worldY = gp.tileSize * 50;
-        speed = 4;
+        worldX = gp.tileSize * 100;
+        worldY = gp.tileSize * 100;
+        speed = 2;
         direction = "right";
         leftOrRight = "right";
+        currentWeapons = new Entity[6];
+        currentPassives = new Entity[6];
+        upgradeChoices = new Entity[4];
 
         //PLAYER STATUS
         level = 1;
         maxLife = 100;
         life = maxLife;
-        strength = 1;
-        dexterity = 1;
+        damageMultiplier = 1;
+        damageReduction = 0;
+        luck = 0;
         exp = 0;
-        nextLevelExp = 5;
+        nextLevelExp = 1;
         coin = 0;
-        currentWeapon = new OBJ_Sword_Normal(gp);
-        currentShield = new OBJ_Shield(gp);
-        attack = getAttack(); //total attack value determined by strength * weaponValue
-        defense = getDefense(); //total defense value determined by dexterity * shieldValue
+        currentWeapons[0] = new Sword(gp);
     }
 
-    public int getAttack(){
-        return strength * currentWeapon.attackValue;
-    }
+    public void setUpgrades(){
+        Random rand = new Random();
 
-    public int getDefense(){
-        return dexterity * currentShield.defenseValue;
+        int pORw = rand.nextInt(2);
+        if(pORw == 1){
+            upgradeChoices[0] = (gp.itemH.createWeapon(rand.nextInt(5)));
+            System.out.println("new weapon created");
+        }
+        else{
+            upgradeChoices[0] = (gp.itemH.createPassive(rand.nextInt(6)));
+            System.out.println("new passive created");
+        }
+
+        pORw = rand.nextInt(1);
+        if(pORw == 1){
+            upgradeChoices[1] = (gp.itemH.createWeapon(rand.nextInt(5)));
+            System.out.println("new weapon created");
+        }
+        else{
+            upgradeChoices[1] = (gp.itemH.createPassive(rand.nextInt(6)));
+            System.out.println("new passive created");
+        }
+
+        pORw = rand.nextInt(1);
+        if(pORw == 1){
+            upgradeChoices[2] = (gp.itemH.createWeapon(rand.nextInt(5)));
+            System.out.println("new weapon created");
+        }
+        else{
+            upgradeChoices[2] = (gp.itemH.createPassive(rand.nextInt(6)));
+            System.out.println("new passive created");
+        }
+
+        if(luck >= 1){
+            if(pORw == 1){
+                upgradeChoices[3] = (gp.itemH.createWeapon(rand.nextInt(5)));
+            }
+            else{
+                upgradeChoices[3] = (gp.itemH.createPassive(rand.nextInt(6)));
+            }
+        }
     }
 
     public void getPlayerImage(){
@@ -86,6 +128,7 @@ public class Player extends Entity{
         up2 = setup("faceless_CHS_right1");
         down1 = setup("faceless_CHS_right1");
         down2 = setup("faceless_CHS_right1");*/
+        icon = setup("/player/faceless_CHS_closeup");
         left0 = setup("/player/faceless_CHS_left0");
         left1 = setup("/player/faceless_CHS_left1");
         left2 = setup("/player/faceless_CHS_left2");
@@ -117,11 +160,12 @@ public class Player extends Entity{
 
     public void update(){
 
-        if(attacking == true){
+        useWeapons();
+        /*if(attacking == true){
             attacking();
-        }
+        }*/
 
-        else if(keyH.upPressed == true || keyH.downPressed == true
+        if(keyH.upPressed == true || keyH.downPressed == true
                 || keyH.leftPressed == true || keyH.rightPressed == true || keyH.interactPressed == true){
 
             if (keyH.upPressed == true && keyH.leftPressed == true){
@@ -225,65 +269,46 @@ public class Player extends Entity{
                 switch(direction){
                 case "up": 
                     worldY -= speed;
-                    if (enemyIndex != 999) {
-                        gp.enemies[enemyIndex].worldY -= speed; 
-                        /*if (gp.enemies[enemyIndex].worldX)
-                        int playerCenterX = (int)(gp.player.worldX + gp.player.hitbox.width/2);
-                        int playerCenterY = (int)(gp.player.worldY + gp.player.hitbox.height/2);
-                        int enemyCenterX = (int)(worldX + hitbox.width/2);
-                        int enemyCenterY = (int)(worldY + hitbox.height/2);*/
-                    }
                     break;
                 case "down": 
                     worldY += speed; 
-                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldY += speed; 
                     break;
                 case "left": 
                     worldX -= speed; 
-                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX -= speed; 
                     break;
                 case "right": 
                     worldX += speed; 
-                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX += speed; 
                     break;
                 case "upleft": 
                     worldY -= speed;
                     worldX -= speed; 
-                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX -= speed; 
-                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldY -= speed; 
                     break;
                 case "upright": 
                     worldY -= speed;
                     worldX += speed; 
-                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX += speed; 
-                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldY -= speed; 
                     break;
                 case "downleft": 
                     worldY += speed;
                     worldX -= speed; 
-                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX -= speed; 
-                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldY += speed; 
                     break;
                 case "downright": 
                     worldY += speed;
                     worldX += speed; 
-                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldX += speed; 
-                    if (enemyIndex != 999) gp.enemies[enemyIndex].worldY += speed; 
                     break;
                 }
             }
-
-            if(keyH.interactPressed == true && attackCanceled == false){
-                gp.playSE(7);
+            /*if(keyH.interactPressed == true && attackCanceled == false){
+                //gp.playSE(7);
                 attacking = true;
                 spriteCounter = 0;
-            }
+            }*/
+
 
             attackCanceled = false;
             gp.keyH.interactPressed = false; //turn off interact pressed outside of check methods so it doesnt constantly turn off
 
             spriteCounter++;
-            if(spriteCounter > 12){
+            if(spriteCounter > 24){
                 if(spriteNum == 1){
                     spriteNum = 2;
                 }
@@ -319,6 +344,7 @@ public class Player extends Entity{
     public void updateDialogue(){
         if(gp.keyH.interactPressed == true){
             if(gp.talkingEntity != null) gp.talkingEntity.speak();
+            else gp.gameState = gp.playState;
         }
         gp.keyH.interactPressed = false; 
         System.out.println("interactPressed = false");
@@ -327,7 +353,17 @@ public class Player extends Entity{
     public void pickUpObject(int i){
         
         if(i != 999){
+            String objectName = gp.obj[i].name;
 
+            switch(objectName){
+                case "Exp Crystal":
+                    //gp.playSE(1);
+                    exp++;
+                    checkLevelUp();
+                    gp.obj[i].alive = false;
+                    gp.ui.addMessage("You got 1 exp!");
+                    break;
+            }
             /*String objectName = gp.obj[i].name;
 
             switch(objectName){
@@ -363,7 +399,7 @@ public class Player extends Entity{
         }
     }
 
-    public void attacking(){
+    /*public void attacking(){
         spriteCounter++;
 
         if (spriteCounter <= 5){
@@ -408,7 +444,7 @@ public class Player extends Entity{
             attacking = false;
         }
 
-    }
+    }*/
 
     public void interactNPC(int i){
         if (i != 999){
@@ -425,9 +461,9 @@ public class Player extends Entity{
     public void contactEnemy(int i){
         if (i != 999){
             if(invincible == false && gp.enemies[i].alive == true && gp.enemies[i].dying == false){
-                gp.playSE(5);
+                //gp.playSE(5);
 
-                int damage = gp.enemies[i].attack - defense;
+                double damage = gp.enemies[i].damageMultiplier * (1-damageReduction);
                 if(damage < 0) damage = 0;
 
                 life -= damage;
@@ -436,13 +472,13 @@ public class Player extends Entity{
         }
     } //when player walks into enemy
 
-    public void damageEnemy(int i){
+    /*public void damageEnemy(int i){
         if (i != 999){
             if(gp.enemies[i].invincible == false && gp.enemies[i].dying == false){
                 
-                gp.playSE(5);
+                //gp.playSE(5);
 
-                int damage = attack - gp.enemies[i].defense;
+                double damage = damageMultiplier * (1-gp.enemies[i].damageReduction);
                 if(damage < 0) damage = 0;
 
                 gp.enemies[i].life -= damage;
@@ -453,10 +489,42 @@ public class Player extends Entity{
                 if(gp.enemies[i].life <= 0){
                     gp.enemies[i].dying = true;
                     gp.ui.addMessage("killed the " + gp.enemies[i].name + "!");
+                    gp.eSpawner.spawnExp(gp.enemies[i].worldX, gp.enemies[i].worldY);
                 }
             }
         }
+    }*/
+
+    public void checkLevelUp(){
+
+        if (exp >= nextLevelExp){
+            level++;
+            nextLevelExp = (int)(nextLevelExp * 1.2);
+            setUpgrades();
+        
+            //gp.playSE(8);
+            gp.gameState = gp.levelupState;
+        }
+
     }
+
+    public void applyPassives(){
+        for(int i = 0; i < currentPassives.length; i++){
+            if(currentPassives[i] != null){
+                currentPassives[i].addEffect();
+                currentPassives[i].applied = true;
+            }
+        }
+    }
+
+    public void useWeapons(){
+        for(int i = 0; i < currentWeapons.length; i++){
+            if(currentWeapons[i] != null){
+                currentWeapons[i].attack();
+            }
+        }
+    }
+    //i love you
 
     public void draw(Graphics2D g2){
 

@@ -21,8 +21,9 @@ public class ENE_sanCulotte extends Entity{
         speed = 1;
         maxLife = 2;
         life = maxLife;
-        attack = 5;
-        defense = 0;
+        damage = 5;
+        damageMultiplier = 1;
+        damageReduction = 0;
 
         hitbox.x = 12;
         hitbox.y = 12;
