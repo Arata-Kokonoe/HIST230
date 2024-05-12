@@ -168,13 +168,38 @@ public class KeyHandler implements KeyListener{
             }
         }      
         if(code == KeyEvent.VK_SPACE){
-            if(gp.player.upgradeChoices[gp.ui.upgradeNum].itemType == 0){
-                int i = utool.checkEntityArr(gp.player.currentPassives);
-                gp.player.currentPassives[i] = gp.player.upgradeChoices[gp.ui.upgradeNum];
+            if(gp.player.upgradeChoices[gp.ui.upgradeNum].passOrWeap == 0){
+                boolean upgraded = false;
+                for(int i = 0; i < gp.player.currentPassives.length; i++){
+                    if(gp.player.currentPassives[i] != null && gp.player.upgradeChoices[gp.ui.upgradeNum].name.contentEquals(gp.player.currentPassives[i].name)){
+                        gp.player.currentPassives[i].checkLevelUp();
+                        upgraded = true;
+                        break;
+                    }
+                }
+                if(upgraded == false){
+                    int i = utool.checkEntityArr(gp.player.currentPassives);
+                    gp.player.currentPassives[i] = gp.player.upgradeChoices[gp.ui.upgradeNum];
+                }
             }
-            else if(gp.player.upgradeChoices[gp.ui.upgradeNum].itemType == 1){
-                int i = utool.checkEntityArr(gp.player.currentWeapons);
-                gp.player.currentWeapons[i] = gp.player.upgradeChoices[gp.ui.upgradeNum];
+            else if(gp.player.upgradeChoices[gp.ui.upgradeNum].passOrWeap == 1){
+                boolean upgraded = false;
+                for(int i = 0; i < gp.player.currentWeapons.length; i++){
+                    if(gp.player.currentWeapons[i] != null && gp.player.upgradeChoices[gp.ui.upgradeNum].name.contentEquals(gp.player.currentWeapons[i].name)){
+                        gp.player.currentWeapons[i].checkLevelUp();
+                        upgraded = true;
+                        break;
+                    }
+                }
+                if(upgraded == false){
+                    int i = utool.checkEntityArr(gp.player.currentWeapons);
+                    gp.player.currentWeapons[i] = gp.player.upgradeChoices[gp.ui.upgradeNum];
+                    if(gp.player.currentWeapons[i].name.contentEquals("Executioner's Badge")){
+                        System.out.println("badge obtained");   
+                        gp.player.badgeIndex = i;
+                        gp.player.hasBadge = true;
+                    }
+                }
             }
             gp.gameState = gp.playState;
             gp.player.applyPassives();

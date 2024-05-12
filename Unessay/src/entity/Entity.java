@@ -4,6 +4,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
@@ -19,6 +20,7 @@ public class Entity {
     public BufferedImage icon;
     public BufferedImage image;
     public Rectangle hitbox = new Rectangle(0, 0, 48, 48);
+    public RoundRectangle2D.Double roundHitbox;
     public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
     public int hitboxDefaultX, hitboxDefaultY;
     public boolean collision = false;
@@ -55,13 +57,16 @@ public class Entity {
     public int damageMultiplier;
     public int damage;
     public double damageReduction;
+    public int cooldown;
     public int exp;
     public int nextLevelExp;
     public int coin;
     public int luck;
 
     //ITEM ATTRIBUTE
-    public int itemType;
+    public int passOrWeap;
+    public int weapType;
+    public int passType;
     public String description;
     public double size = 1.0;
 
@@ -330,9 +335,18 @@ public class Entity {
     }
 
     public void addEffect(){
-        System.out.println("this entity has no effect, overwrite method");
+        System.out.println("this entity has no effect, overwrite method" + "\nEntity name: " + this.name);
     }
     public void attack(){
-        System.out.println("this entity has no attack, overwrite method");
+        System.out.println("this entity has no attack, overwrite method" + "\nEntity name: " + this.name);
+    }
+
+    public void checkLevelUp(){
+        System.out.println("this entity shouldn't level up, overwrite method" + "\nEntity name: " + this.name);
+    }
+
+    public boolean equals(Entity other){
+        if (name.contentEquals(other.name)) return true;
+        else return false;
     }
 }

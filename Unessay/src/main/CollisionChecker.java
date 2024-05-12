@@ -377,8 +377,39 @@ public class CollisionChecker {
                         if(damage < 0) damage = 0;
                         enemies[i].life -= damage;
                         gp.ui.addMessage(damage + " damage!");
+
+                        if(gp.enemies[i].life <= 0){
+                            gp.enemies[i].dying = true;
+                            gp.ui.addMessage("killed the " + gp.enemies[i].name + "!");
+                            gp.eSpawner.spawnExp(gp.enemies[i].worldX, gp.enemies[i].worldY);
+                        }
+                    }
+                }
+                enemies[i].hitbox.x = enemies[i].hitboxDefaultX;
+                enemies[i].hitbox.y = enemies[i].hitboxDefaultY;
+            }
+        }
+    }
+
+    public void checkRoundWeaponHit(Entity weapon, Entity[] enemies){
+
+        weapon.roundHitbox.x = (gp.player.worldX - 48*weapon.size); //48 because rn base size is 48
+        weapon.roundHitbox.width = (48*weapon.size*3);  //width = 2 slashes + size of player which is gp.tilesize
+        weapon.roundHitbox.y = (gp.player.worldY - 48*weapon.size);
+        weapon.roundHitbox.height = (48*weapon.size*3);
+
+        for(int i = 0; i < enemies.length; i++){ // i love you <3
+            if(enemies[i] != null){
+                enemies[i].hitbox.x = enemies[i].worldX + enemies[i].hitbox.x;
+                enemies[i].hitbox.y = enemies[i].worldY + enemies[i].hitbox.y;
+                if(weapon.roundHitbox.intersects(enemies[i].hitbox)){
+                    //gp.playSE(5);
+                    if(enemies[i].invincible == false){
+                        double damage = weapon.damage * gp.player.damageMultiplier * (1-enemies[i].damageReduction);
+                        if(damage < 0) damage = 0;
+                        enemies[i].life -= damage;
+                        gp.ui.addMessage(damage + " damage!");
                         
-                        gp.enemies[i].invincible = true;
 
                         if(gp.enemies[i].life <= 0){
                             gp.enemies[i].dying = true;

@@ -2,7 +2,7 @@ package main;
 
 import java.util.Random;
 
-import enemies.ENE_sanCulotte;
+import enemies.ENE_sansCulotte;
 import entity.Entity;
 import object.OBJ_Exp_Crystal;
 
@@ -23,7 +23,7 @@ public class EnemySpawner {
         spawnTimer++;
 
         if(spawnTimer >= 100/difficulty && freeIndex != -1){
-            gp.enemies[freeIndex] = new ENE_sanCulotte(gp);
+            gp.enemies[freeIndex] = new ENE_sansCulotte(gp);
 
             int x, y;
             
@@ -122,7 +122,7 @@ public class EnemySpawner {
         int freeIndex = utool.checkEntityArr(gp.enemies);
 
         if(freeIndex != -1){
-            gp.enemies[freeIndex] = new ENE_sanCulotte(gp);
+            gp.enemies[freeIndex] = new ENE_sansCulotte(gp);
 
             int x, y;
             

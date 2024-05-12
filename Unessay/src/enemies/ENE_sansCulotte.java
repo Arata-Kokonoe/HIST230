@@ -5,17 +5,17 @@ import java.util.Random;
 import entity.Entity;
 import main.GamePanel;
 
-public class ENE_sanCulotte extends Entity{
+public class ENE_sansCulotte extends Entity{
 
     GamePanel gp;
 
-    public ENE_sanCulotte(GamePanel gp){
+    public ENE_sansCulotte(GamePanel gp){
         super(gp);
 
         this.gp = gp;
 
         type = 2;
-        name = "San Culotte";
+        name = "Sans-culotte";
         direction = "right";
         leftOrRight = "right";
         speed = 1;

@@ -1,50 +1,46 @@
 package items;
 
-import java.awt.image.BufferedImage;
-
 import entity.Entity;
 import main.GamePanel;
 
-public class Armor extends Entity{
+public class Cake extends Entity{
     public int level;
     public GamePanel gp;
 
-    public Armor(GamePanel gp){
+    public Cake(GamePanel gp){
         super(gp);
-
         this.gp = gp;
-
-        name = "Armor";
-        description = "Reduces your damage taken by 20%!";
         level = 1;
-        passType = 0;
+
+        name = "Cake";
+        description = "Increases your damage!\nEnrage the Sans-culottes";
         passOrWeap = 0;
+        passType = 2;
         getImage();
     }
 
     public void getImage(){
 
-        icon = setup("/items/armorIcon");
-
+        icon = setup("/items/cakeIcon");
     }
 
     public void addEffect(){
         if(applied == false){
             switch(level){
                 case 1:
-                    gp.player.damageReduction += 0.1;
+                    gp.player.damageMultiplier += 0.15;
                     break;
                 case 2:
-                    gp.player.damageReduction += 0.1;
+                    gp.player.damageMultiplier += 0.15;
                     break;
                 case 3:
-                    gp.player.damageReduction += 0.1;
+                    gp.player.damageMultiplier += 0.1;
                     break;
                 case 4:
-                    gp.player.damageReduction += 0.1;
+                    gp.player.damageMultiplier += 0.1;
                     break;
                 case 5:
-                    gp.player.damageReduction += 0.05;
+                    gp.player.damageMultiplier += 0.05;
                     break;
             }
             applied = true;
@@ -59,7 +55,7 @@ public class Armor extends Entity{
         if(level == 4){
             gp.player.availableUpgrades.remove(gp.player.availableUpgrades.indexOf(this));
             //DEBUG
-            System.out.println("armor reached level 4\n");
+            System.out.println("cake reached level 4\n");
             for (Entity e: gp.player.availableUpgrades) {
                 System.out.println("item: " + e.name);
             }

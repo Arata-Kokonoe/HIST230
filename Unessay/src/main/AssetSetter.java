@@ -1,7 +1,7 @@
 package main;
 
 import object.OBJ_Key;
-import enemies.ENE_sanCulotte;
+import enemies.ENE_sansCulotte;
 import entity.NPC_OldMan;
 import object.OBJ_Boots;
 import object.OBJ_Chest;
@@ -58,12 +58,12 @@ public class AssetSetter {
         
     }
 
-    public void setEnemy(){
-        gp.enemies[0] = new ENE_sanCulotte(gp);
+    public void setEnemy(){  
+        gp.enemies[0] = new ENE_sansCulotte(gp);
         gp.enemies[0].worldX = gp.tileSize*51;
         gp.enemies[0].worldY = gp.tileSize*51;
 
-        gp.enemies[1] = new ENE_sanCulotte(gp);
+        gp.enemies[1] = new ENE_sansCulotte(gp);
         gp.enemies[1].worldX = gp.tileSize*25;
         gp.enemies[1].worldY = gp.tileSize*37;
     }

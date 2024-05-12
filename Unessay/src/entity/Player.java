@@ -11,6 +11,7 @@ import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Random;
 
+import items.Badge;
 import items.Sword;
 import main.GamePanel;
 import main.ItemHandler;
@@ -25,9 +26,13 @@ public class Player extends Entity{
     public int standCounter;
     public boolean attackCanceled = false;
     public Entity[] upgradeChoices;
+    public ArrayList<Entity> availableUpgrades;
 
     public Entity[] currentWeapons;
     public Entity[] currentPassives;
+
+    public boolean hasBadge = false;
+    public int badgeIndex;
 
     //public int hasKey = 0;
 
@@ -65,6 +70,12 @@ public class Player extends Entity{
         currentWeapons = new Entity[6];
         currentPassives = new Entity[6];
         upgradeChoices = new Entity[4];
+        availableUpgrades = new ArrayList<Entity>();
+
+        for (int i = 0; i < gp.itemH.maxTypes; i++){
+            availableUpgrades.add(gp.itemH.createPassive(i));
+            availableUpgrades.add(gp.itemH.createWeapon(i));
+        }
 
         //PLAYER STATUS
         level = 1;
@@ -72,6 +83,7 @@ public class Player extends Entity{
         life = maxLife;
         damageMultiplier = 1;
         damageReduction = 0;
+        size = 1.0;
         luck = 0;
         exp = 0;
         nextLevelExp = 1;
@@ -82,44 +94,36 @@ public class Player extends Entity{
     public void setUpgrades(){
         Random rand = new Random();
 
-        int pORw = rand.nextInt(2);
-        if(pORw == 1){
-            upgradeChoices[0] = (gp.itemH.createWeapon(rand.nextInt(5)));
-            System.out.println("new weapon created");
-        }
-        else{
-            upgradeChoices[0] = (gp.itemH.createPassive(rand.nextInt(6)));
-            System.out.println("new passive created");
-        }
-
-        pORw = rand.nextInt(1);
-        if(pORw == 1){
-            upgradeChoices[1] = (gp.itemH.createWeapon(rand.nextInt(5)));
-            System.out.println("new weapon created");
-        }
-        else{
-            upgradeChoices[1] = (gp.itemH.createPassive(rand.nextInt(6)));
-            System.out.println("new passive created");
-        }
-
-        pORw = rand.nextInt(1);
-        if(pORw == 1){
-            upgradeChoices[2] = (gp.itemH.createWeapon(rand.nextInt(5)));
-            System.out.println("new weapon created");
-        }
-        else{
-            upgradeChoices[2] = (gp.itemH.createPassive(rand.nextInt(6)));
-            System.out.println("new passive created");
-        }
+        upgradeChoices[0] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
+        availableUpgrades.remove(availableUpgrades.indexOf(upgradeChoices[0]));
+        upgradeChoices[1] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
+        availableUpgrades.remove(availableUpgrades.indexOf(upgradeChoices[1]));
+        upgradeChoices[2] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
+        availableUpgrades.remove(availableUpgrades.indexOf(upgradeChoices[2]));
 
         if(luck >= 1){
-            if(pORw == 1){
-                upgradeChoices[3] = (gp.itemH.createWeapon(rand.nextInt(5)));
-            }
-            else{
-                upgradeChoices[3] = (gp.itemH.createPassive(rand.nextInt(6)));
-            }
+            upgradeChoices[3] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
         }
+        
+        if(upgradeChoices[0].passOrWeap == 0){
+            availableUpgrades.add(gp.itemH.createPassive(upgradeChoices[0].passType));
+        }
+        else{
+            availableUpgrades.add(gp.itemH.createWeapon(upgradeChoices[0].weapType));
+        }
+        if(upgradeChoices[1].passOrWeap == 0){
+            availableUpgrades.add(gp.itemH.createPassive(upgradeChoices[1].passType));
+        }
+        else{
+            availableUpgrades.add(gp.itemH.createWeapon(upgradeChoices[1].weapType));
+        }
+        if(upgradeChoices[2].passOrWeap == 0){
+            availableUpgrades.add(gp.itemH.createPassive(upgradeChoices[2].passType));
+        }
+        else{
+            availableUpgrades.add(gp.itemH.createWeapon(upgradeChoices[2].weapType));
+        }
+
     }
 
     public void getPlayerImage(){
@@ -512,7 +516,6 @@ public class Player extends Entity{
         for(int i = 0; i < currentPassives.length; i++){
             if(currentPassives[i] != null){
                 currentPassives[i].addEffect();
-                currentPassives[i].applied = true;
             }
         }
     }
@@ -597,6 +600,15 @@ public class Player extends Entity{
         else{
             changeAlpha(g2, 1f);
             g2.drawImage(image, tempScreenX, tempScreenY, null); //draw player
+        }
+
+        if(hasBadge == true){
+            System.out.println("drawing badge");
+            int screenX = (int)(tempScreenX - 48*size);
+            int screenY = (int)(tempScreenY - 48*size);
+
+            g2.setColor(new Color(0, 0, 0, 125));
+            g2.fillOval(screenX, screenY, (int)(48*size*3), (int)(48*size*3));
         }
         //reset alpha
         //g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
