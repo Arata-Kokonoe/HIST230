@@ -14,16 +14,17 @@ public class EnemySpawner {
 
     public EnemySpawner(GamePanel gp){
         this.gp = gp;
+        maxEnemies = 30;
         difficulty = 1;
     }
 
     public int spawnEnemy(){//spawns an enemy if a certain amount of frames have passed, can change based on difficulty
         //spawns an enemy slightly offscreen based on direction player is moving
-        int freeIndex = utool.checkEntityArr(gp.enemies);
         spawnTimer++;
 
-        if(spawnTimer >= 100/difficulty && freeIndex != -1){
-            gp.enemies[freeIndex] = new ENE_sansCulotte(gp);
+        if(spawnTimer >= 100/difficulty && gp.enemies.size() != maxEnemies){
+            gp.enemies.add(new ENE_sansCulotte(gp));
+            int i = gp.enemies.size()-1;
 
             int x, y;
             
@@ -109,20 +110,20 @@ public class EnemySpawner {
                     break;
             }
 
-            gp.enemies[freeIndex].worldX = x;
-            gp.enemies[freeIndex].worldY = y;
+            gp.enemies.get(i).worldX = x;
+            gp.enemies.get(i).worldY = y;
 
             spawnTimer = 0;
-            return freeIndex;
+            return i;
         }
         return -1;
     }
 
     public int spawnEnemyFast(){ //same as spawnEnemy but without the spawnTimer
-        int freeIndex = utool.checkEntityArr(gp.enemies);
 
-        if(freeIndex != -1){
-            gp.enemies[freeIndex] = new ENE_sansCulotte(gp);
+        if(gp.enemies.size() != maxEnemies){
+            gp.enemies.add(new ENE_sansCulotte(gp));
+            int i = gp.enemies.size()-1;
 
             int x, y;
             
@@ -208,10 +209,10 @@ public class EnemySpawner {
                     break;
             }
 
-            gp.enemies[freeIndex].worldX = x;
-            gp.enemies[freeIndex].worldY = y;
+            gp.enemies.get(i).worldX = x;
+            gp.enemies.get(i).worldY = y;
 
-            return freeIndex;
+            return i;
         }
         return -1;
     }

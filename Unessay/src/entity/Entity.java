@@ -64,9 +64,10 @@ public class Entity {
     public int maxLife;
     public int life;
     public int level;
-    public int damageMultiplier;
+    public double damageMultiplier;
     public int damage;
     public double damageReduction;
+    public double sizeMultiplier;
     public int cooldown;
     public int exp;
     public int nextLevelExp;
@@ -87,7 +88,7 @@ public class Entity {
     public final int MANUAL_PASSTYPE = 3;
     public final int SPOON_PASSTYPE = 4;
     public String description;
-    public double size = 1.0;
+    public int baseSize;
 
     public Entity (GamePanel gp){
         this.gp = gp;

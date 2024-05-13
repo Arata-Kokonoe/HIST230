@@ -21,7 +21,7 @@ public class ENE_sansCulotte extends Entity{
         direction = "right";
         leftOrRight = "right";
         speed = 1;
-        maxLife = 2;
+        maxLife = 20;
         life = maxLife;
         damage = 5;
         damageMultiplier = 1;

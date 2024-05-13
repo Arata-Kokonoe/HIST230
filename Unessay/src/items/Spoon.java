@@ -18,7 +18,7 @@ public class Spoon extends Entity{
 
         passOrWeap = PASSIVE_NUM;
         passType = SPOON_PASSTYPE;
-        
+
         getImage();
     }
 
@@ -31,19 +31,19 @@ public class Spoon extends Entity{
         if(applied == false){
             switch(level){
                 case 1:
-                    gp.player.size += 0.2;
+                    gp.player.sizeMultiplier += 0.2;
                     break;
                 case 2:
-                    gp.player.size += 0.2;
+                    gp.player.sizeMultiplier += 0.2;
                     break;
                 case 3:
-                    gp.player.size += 0.15;
+                    gp.player.sizeMultiplier += 0.15;
                     break;
                 case 4:
-                    gp.player.size += 0.15;
+                    gp.player.sizeMultiplier += 0.15;
                     break;
                 case 5:
-                    gp.player.size += 0.05;
+                    gp.player.sizeMultiplier += 0.05;
                     break;
             }
             applied = true;

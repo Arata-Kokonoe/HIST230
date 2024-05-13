@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 import entity.Entity;
 
@@ -252,15 +253,78 @@ public class CollisionChecker {
         int index = 999;
 
         for(int i = 0; i < target.length; i++){
+            if(target[i] != null){
+                if(target[i].dying != true){
 
-            if(target[i] != null && target[i].dying != true){
+                    // Get entity's hitbox position
+                    entity.hitbox[0].x = entity.worldX + entity.hitbox[0].x;
+                    entity.hitbox[0].y = entity.worldY + entity.hitbox[0].y;
+                    //Get the object's hitbox position
+                    target[i].hitbox[0].x = target[i].worldX + target[i].hitbox[0].x;
+                    target[i].hitbox[0].y = target[i].worldY + target[i].hitbox[0].y;
+    
+                    switch(entity.direction){
+                    case "up":
+                        entity.hitbox[0].y -= entity.speed;
+                        break;
+                    case "down":
+                        entity.hitbox[0].y += entity.speed;
+                        break;
+                    case "left":
+                        entity.hitbox[0].x -= entity.speed;
+                        break;
+                    case "right":
+                        entity.hitbox[0].x += entity.speed;
+                        break;
+                    case "upleft":
+                        entity.hitbox[0].x -= entity.speed;
+                        entity.hitbox[0].y -= entity.speed;
+                        break;
+                    case "downleft":
+                        entity.hitbox[0].x -= entity.speed;
+                        entity.hitbox[0].y += entity.speed;
+                        break;
+                    case "upright":
+                        entity.hitbox[0].x += entity.speed;
+                        entity.hitbox[0].y -= entity.speed;
+                        break;
+                    case "downright":
+                        entity.hitbox[0].x += entity.speed;
+                        entity.hitbox[0].y += entity.speed;
+                        break;
+                    }
+                    if(entity.hitbox[0].intersects(target[i].hitbox[0])){
+                        if(target[i] != entity){
+                            entity.collisionOn = true;
+                            index = i;
+                        }
+                    }
+                        
+                    entity.hitbox[0].x = entity.hitboxDefaultX;
+                    entity.hitbox[0].y = entity.hitboxDefaultY;
+                    target[i].hitbox[0].x = target[i].hitboxDefaultX;
+                    target[i].hitbox[0].y = target[i].hitboxDefaultY;
+                }
+            
+            }
+        }
+        return index;
+    }
+
+    public int checkEntity(Entity entity, ArrayList<Entity> target){ //very similar to checkObj code, but mainly used for enemies
+
+        int index = 999;
+
+        for(int i = 0; i < target.size(); i++){
+
+            if(target.get(i).dying != true){
 
                 // Get entity's hitbox position
                 entity.hitbox[0].x = entity.worldX + entity.hitbox[0].x;
                 entity.hitbox[0].y = entity.worldY + entity.hitbox[0].y;
                 //Get the object's hitbox position
-                target[i].hitbox[0].x = target[i].worldX + target[i].hitbox[0].x;
-                target[i].hitbox[0].y = target[i].worldY + target[i].hitbox[0].y;
+                target.get(i).hitbox[0].x = target.get(i).worldX + target.get(i).hitbox[0].x;
+                target.get(i).hitbox[0].y = target.get(i).worldY + target.get(i).hitbox[0].y;
 
                 switch(entity.direction){
                 case "up":
@@ -292,8 +356,8 @@ public class CollisionChecker {
                     entity.hitbox[0].y += entity.speed;
                     break;
                 }
-                if(entity.hitbox[0].intersects(target[i].hitbox[0])){
-                    if(target[i] != entity){
+                if(entity.hitbox[0].intersects(target.get(i).hitbox[0])){
+                    if(target.get(i) != entity){
                         entity.collisionOn = true;
                         index = i;
                     }
@@ -302,8 +366,8 @@ public class CollisionChecker {
 
                 entity.hitbox[0].x = entity.hitboxDefaultX;
                 entity.hitbox[0].y = entity.hitboxDefaultY;
-                target[i].hitbox[0].x = target[i].hitboxDefaultX;
-                target[i].hitbox[0].y = target[i].hitboxDefaultY;
+                target.get(i).hitbox[0].x = target.get(i).hitboxDefaultX;
+                target.get(i).hitbox[0].y = target.get(i).hitboxDefaultY;
             }
         }
         return index;
@@ -363,81 +427,81 @@ public class CollisionChecker {
         return contactPlayer;
     } 
 
-    public void checkWeaponHit(Entity weapon, Entity[] enemies){
+    public void checkWeaponHit(Entity weapon, ArrayList<Entity> enemies){
 
         for(Rectangle hitbox : weapon.hitbox){
-            hitbox.x = (int)(gp.player.worldX - 48*weapon.size); //48 because rn base size is 48
-            hitbox.width = (int)(48*weapon.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+            hitbox.x = (int)(gp.player.worldX - weapon.baseSize*gp.player.sizeMultiplier); //48 because rn base sizeMultiplier is 48
+            hitbox.width = (int)(weapon.baseSize*gp.player.sizeMultiplier*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
             hitbox.y = (gp.player.worldY);
             hitbox.height = gp.tileSize;
 
-            for(int i = 0; i < enemies.length; i++){
-                if(enemies[i] != null){
-                    if(weapon.enemiesHit.indexOf(enemies[i]) == -1){
-                        enemies[i].hitbox[0].x = enemies[i].worldX + enemies[i].hitbox[0].x;
-                        enemies[i].hitbox[0].y = enemies[i].worldY + enemies[i].hitbox[0].y;
-                        if(hitbox.intersects(enemies[i].hitbox[0])){
-                            //gp.playSE(5);i
-                            
-                            double damage = weapon.damage * gp.player.damageMultiplier * (1-enemies[i].damageReduction);
-                            if(damage < 0) damage = 0;
-                            enemies[i].life -= damage;
-                            gp.ui.addMessage(damage + " damage!");
+            for(int i = 0; i < enemies.size(); i++){
+                if(weapon.enemiesHit.indexOf(enemies.get(i)) == -1){
+                    enemies.get(i).hitbox[0].x = enemies.get(i).worldX + enemies.get(i).hitbox[0].x;
+                    enemies.get(i).hitbox[0].y = enemies.get(i).worldY + enemies.get(i).hitbox[0].y;
+                    if(hitbox.intersects(enemies.get(i).hitbox[0])){
+                        //gp.playSE(5);i
+                        
+                        System.out.println("player damageMultiplier = " + gp.player.damageMultiplier);
+                        double damage = weapon.damage * gp.player.damageMultiplier * (1-enemies.get(i).damageReduction);
+                        System.out.println("damage of " + weapon.name + " = " + damage);
+                        if(damage < 0) damage = 0;
+                        enemies.get(i).life -= damage;
+                        gp.ui.addMessage(damage + " damage!");
 
-                            enemies[i].hit = true;
-                            enemies[i].lastDamageTaken = (int)damage;
-                            weapon.enemiesHit.add(enemies[i]);
-                            weapon.enemiesHitTimer.add(0);
+                        enemies.get(i).hit = true;
+                        enemies.get(i).lastDamageTaken = (int)damage;
+                        weapon.enemiesHit.add(enemies.get(i));
+                        weapon.enemiesHitTimer.add(0);
 
-                            if(gp.enemies[i].life <= 0){
-                                gp.enemies[i].dying = true;
-                                gp.ui.addMessage("killed the " + gp.enemies[i].name + "!");
-                                gp.eSpawner.spawnExp(gp.enemies[i].worldX, gp.enemies[i].worldY);
-                            }
+                        if(enemies.get(i).life <= 0){
+                            enemies.get(i).dying = true;
+                            gp.ui.addMessage("killed the " + enemies.get(i).name + "!");
+                            gp.eSpawner.spawnExp(enemies.get(i).worldX, enemies.get(i).worldY);
                         }
-                        enemies[i].hitbox[0].x = enemies[i].hitboxDefaultX;
-                        enemies[i].hitbox[0].y = enemies[i].hitboxDefaultY;   
                     }
+                    enemies.get(i).hitbox[0].x = enemies.get(i).hitboxDefaultX;
+                    enemies.get(i).hitbox[0].y = enemies.get(i).hitboxDefaultY;   
                 }
             }
         }
         
     }
 
-    public void checkRoundWeaponHit(Entity weapon, Entity[] enemies){
+    public void checkRoundWeaponHit(Entity weapon, ArrayList<Entity> enemies){
 
-        weapon.roundHitbox.x = (gp.player.worldX - 48*weapon.size); //48 because rn base size is 48
-        weapon.roundHitbox.width = (48*weapon.size*3);  //width = 2 slashes + size of player which is gp.tilesize
-        weapon.roundHitbox.y = (gp.player.worldY - 48*weapon.size);
-        weapon.roundHitbox.height = (48*weapon.size*3);
+        weapon.roundHitbox.x = (gp.player.worldX - weapon.baseSize*gp.player.sizeMultiplier); //48 because rn base size is 48
+        weapon.roundHitbox.width = (weapon.baseSize*gp.player.sizeMultiplier*3);  //width = 2 slashes + size of player which is gp.tilesize
+        weapon.roundHitbox.y = (gp.player.worldY - weapon.baseSize*gp.player.sizeMultiplier);
+        weapon.roundHitbox.height = (weapon.baseSize*gp.player.sizeMultiplier*3);
 
-        for(int i = 0; i < enemies.length; i++){ // i love you <3
-            if(enemies[i] != null){
-                if(weapon.enemiesHit.indexOf(enemies[i]) == -1){
-                    enemies[i].hitbox[0].x = enemies[i].worldX + enemies[i].hitbox[0].x;
-                    enemies[i].hitbox[0].y = enemies[i].worldY + enemies[i].hitbox[0].y;
-                    if(weapon.roundHitbox.intersects(enemies[i].hitbox[0])){
-                        //gp.playSE(5);
-                        double damage = weapon.damage * gp.player.damageMultiplier * (1-enemies[i].damageReduction);
-                        if(damage < 0) damage = 0;
-                        enemies[i].life -= damage;
-                        gp.ui.addMessage(damage + " damage!");
+        for(int i = 0; i < enemies.size(); i++){ // i love you <3
 
-                        enemies[i].hit = true;
-                        enemies[i].lastDamageTaken = (int)damage;
-                        weapon.enemiesHit.add(enemies[i]);
-                        weapon.enemiesHitTimer.add(0);
+            if(weapon.enemiesHit.indexOf(enemies.get(i)) == -1){
+                enemies.get(i).hitbox[0].x = enemies.get(i).worldX + enemies.get(i).hitbox[0].x;
+                enemies.get(i).hitbox[0].y = enemies.get(i).worldY + enemies.get(i).hitbox[0].y;
+                if(weapon.roundHitbox.intersects(enemies.get(i).hitbox[0])){
+                    //gp.playSE(5);
+                    double damage = weapon.damage * gp.player.damageMultiplier * (1-enemies.get(i).damageReduction);
+                    if(damage < 0) damage = 0;
+                    enemies.get(i).life -= damage;
+                    gp.ui.addMessage(damage + " damage!");
 
-                        if(gp.enemies[i].life <= 0){
-                            gp.enemies[i].dying = true;
-                            gp.ui.addMessage("killed the " + gp.enemies[i].name + "!");
-                            gp.eSpawner.spawnExp(gp.enemies[i].worldX, gp.enemies[i].worldY);
-                        }
+                    enemies.get(i).hit = true;
+                    enemies.get(i).lastDamageTaken = (int)damage;
+                    weapon.enemiesHit.add(enemies.get(i));
+                    weapon.enemiesHitTimer.add(0);
+
+                    if(enemies.get(i).life <= 0){
+                        enemies.get(i).dying = true;
+                        gp.ui.addMessage("killed the " + enemies.get(i).name + "!");
+                        gp.eSpawner.spawnExp(enemies.get(i).worldX, enemies.get(i).worldY);
                     }
-                    enemies[i].hitbox[0].x = enemies[i].hitboxDefaultX;
-                    enemies[i].hitbox[0].y = enemies[i].hitboxDefaultY;
                 }
+                enemies.get(i).hitbox[0].x = enemies.get(i).hitboxDefaultX;
+                enemies.get(i).hitbox[0].y = enemies.get(i).hitboxDefaultY;
             }
+            
         }
     }
 }

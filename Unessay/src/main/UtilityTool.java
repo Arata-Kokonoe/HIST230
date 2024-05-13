@@ -3,6 +3,7 @@ package main;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import entity.Entity;
 
@@ -22,9 +23,9 @@ public class UtilityTool {
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alphaValue));
     }
 
-    public int checkEntityArr(Entity[] arr){
-        for (int i = 0; i < arr.length; i++){
-            if (arr[i] == null) return i; //find and return empty index in enemy array
+    public int checkEntityArr(Entity[] entities){
+        for (int i = 0; i < entities.length; i++){
+            if (entities[i] == null) return i; //find and return empty index in enemy array
         }
 
         return -1;  //if none, return -1

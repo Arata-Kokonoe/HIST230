@@ -85,7 +85,7 @@ public class Player extends Entity{
         life = maxLife;
         damageMultiplier = 1;
         damageReduction = 0;
-        size = 1.0;
+        sizeMultiplier = 1.0;
         luck = 0;
         exp = 0;
         nextLevelExp = 1;
@@ -351,7 +351,6 @@ public class Player extends Entity{
             else gp.gameState = gp.playState;
         }
         gp.keyH.interactPressed = false; 
-        System.out.println("interactPressed = false");
     }
 
     public void pickUpObject(int i){
@@ -464,10 +463,10 @@ public class Player extends Entity{
 
     public void contactEnemy(int i){
         if (i != 999){
-            if(invincible == false && gp.enemies[i].alive == true && gp.enemies[i].dying == false){
+            if(invincible == false && gp.enemies.get(i).alive == true && gp.enemies.get(i).dying == false){
                 //gp.playSE(5);
 
-                double damage = gp.enemies[i].damageMultiplier * (1-damageReduction);
+                double damage = gp.enemies.get(i).damageMultiplier * (1-damageReduction);
                 if(damage < 0) damage = 0;
 
                 life -= damage;
@@ -531,6 +530,7 @@ public class Player extends Entity{
     public void drawWeapons(Graphics2D g2){
         for(int i = 0; i < currentWeapons.length; i++){
             if(currentWeapons[i] != null){
+                if(currentWeapons[i].weapType == SWORD_WEAPTYPE) currentWeapons[i].scaleImages();
                 currentWeapons[i].draw(g2);
             }
         }

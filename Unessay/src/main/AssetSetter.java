@@ -59,12 +59,12 @@ public class AssetSetter {
     }
 
     public void setEnemy(){  
-        gp.enemies[0] = new ENE_sansCulotte(gp);
-        gp.enemies[0].worldX = gp.tileSize*51;
-        gp.enemies[0].worldY = gp.tileSize*51;
+        gp.enemies.add(new ENE_sansCulotte(gp));
+        gp.enemies.get(0).worldX = gp.tileSize*51;
+        gp.enemies.get(0).worldY = gp.tileSize*51;
 
-        gp.enemies[1] = new ENE_sansCulotte(gp);
-        gp.enemies[1].worldX = gp.tileSize*25;
-        gp.enemies[1].worldY = gp.tileSize*37;
+        gp.enemies.add(new ENE_sansCulotte(gp));
+        gp.enemies.get(1).worldX = gp.tileSize*25;
+        gp.enemies.get(1).worldY = gp.tileSize*37;
     }
 }

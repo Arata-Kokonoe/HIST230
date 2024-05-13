@@ -17,20 +17,23 @@ public class Cake extends Entity{
 
         passOrWeap = PASSIVE_NUM;
         passType = CAKE_PASSTYPE;
-        
+
         getImage();
     }
 
     public void getImage(){
 
         icon = setup("/items/cakeIcon");
+        //add cake slices for each level
     }
 
     public void addEffect(){
         if(applied == false){
             switch(level){
                 case 1:
-                    gp.player.damageMultiplier += 0.15;
+                    System.out.println("added level 1 cake effect");
+                    gp.player.damageMultiplier += 0.2;
+                    System.out.println("player damageMultiplier = " + gp.player.damageMultiplier);
                     break;
                 case 2:
                     gp.player.damageMultiplier += 0.15;

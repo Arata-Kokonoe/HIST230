@@ -54,7 +54,7 @@ public class GamePanel extends JPanel implements Runnable{
     public Player player = new Player(this, keyH);
     public Entity obj[] = new Entity[100];
     public Entity npc[] = new Entity[10];
-    public Entity enemies[] = new Entity[10];
+    public ArrayList<Entity> enemies = new ArrayList<Entity>();
     public Entity talkingEntity;
     public ArrayList<Entity> entityList = new ArrayList<>();
 
@@ -181,15 +181,17 @@ public class GamePanel extends JPanel implements Runnable{
 
             //ENEMY
             eSpawner.spawnEnemy();
-            for(int i = 0; i < enemies.length; i++){
-                if(enemies[i] != null){
-                    if(enemies[i].checkOffscreen()){
-                        enemies[i].alive = false;
-                        enemies[i].dying = false;
-                        eSpawner.spawnEnemyFast();
-                    }
-                    if (enemies[i].alive == true && enemies[i].dying == false){enemies[i].update();}
-                    if (enemies[i].alive == false){enemies[i] = null;}
+            for(int i = 0; i < enemies.size(); i++){
+                Entity enemy = enemies.get(i);
+                if(enemy.checkOffscreen()){
+                    enemy.alive = false;
+                    enemy.dying = false;
+                    eSpawner.spawnEnemyFast();
+                }
+                if (enemy.alive == true && enemy.dying == false){enemy.update();}
+                if (enemy.alive == false){
+                    enemy = null;
+                    enemies.remove(i);
                 }
             }
             
@@ -235,10 +237,8 @@ public class GamePanel extends JPanel implements Runnable{
                     entityList.add(obj[i]);
                 }
             }
-            for(int i = 0; i < enemies.length; i++){
-                if(enemies[i] != null){
-                    entityList.add(enemies[i]);
-                }
+            for(int i = 0; i < enemies.size(); i++){
+                entityList.add(enemies.get(i));
             }
 
             //SORT
