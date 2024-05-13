@@ -348,13 +348,13 @@ public class UI {
             g2.drawRoundRect(x+25, y+25, gp.tileSize*3, gp.tileSize*3, 15, 15);
         }
 
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 24F));
+        g2.setFont(g2.getFont().deriveFont(Font.ITALIC, 18F));
         x += gp.tileSize*4;
         y += gp.tileSize;
 
         for(String line : currentDialogue.split("\n")){
             g2.drawString(line, x, y);
-            y += 40;
+            y += 20;
         }
 
         g2.setFont(g2.getFont().deriveFont(Font.ITALIC, 12F));
