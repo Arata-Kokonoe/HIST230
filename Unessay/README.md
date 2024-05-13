@@ -22,5 +22,7 @@ Future Updates (AKA the To-Do List):
     * letters around the map
     * secret ending
     * npcs = famous figures
+    * fix enemy movement glitching on each other
+    * change grass tiles to cobblestone or something
 
 README last updated 5/13/2024 at 8:56 AM
