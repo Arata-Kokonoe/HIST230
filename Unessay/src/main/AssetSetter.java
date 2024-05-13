@@ -1,12 +1,14 @@
 package main;
 
 import object.OBJ_Key;
+import object.OBJ_Letter;
 import enemies.ENE_sansCulotte;
 import entity.NPC_OldMan;
 import object.OBJ_Boots;
 import object.OBJ_Chest;
 import object.OBJ_Door;
 import object.OBJ_Exp_Crystal;
+import object.OBJ_InvisibleWall;
 
 public class AssetSetter {
     GamePanel gp;
@@ -16,39 +18,34 @@ public class AssetSetter {
     }
 
     public void setObject(){
-        
-        /*gp.obj[0] = new OBJ_Chest(gp);
-        gp.obj[0].worldX = 23 * gp.tileSize;
-        gp.obj[0].worldY = 7 * gp.tileSize;
 
-        gp.obj[1] = new OBJ_Key(gp);
-        gp.obj[1].worldX = 24 * gp.tileSize;
-        gp.obj[1].worldY = 25 * gp.tileSize;
+        for (int i = 0; i < 200; i++){
+            gp.obj[i] = new OBJ_InvisibleWall(gp);
+            gp.obj[i].worldX = gp.tileSize * (i+25);
+            gp.obj[i].worldY = gp.tileSize * 25;
+        }
 
-        gp.obj[2] = new OBJ_Key(gp);
-        gp.obj[2].worldX = 22 * gp.tileSize;
-        gp.obj[2].worldY = 25 * gp.tileSize;
+        for (int i = 200; i < 400; i++){
+            gp.obj[i] = new OBJ_InvisibleWall(gp);
+            gp.obj[i].worldX = gp.tileSize * 25;
+            gp.obj[i].worldY = gp.tileSize * (i-200+25);
+        }
 
-        gp.obj[3] = new OBJ_Door(gp);
-        gp.obj[3].worldX = 22 * gp.tileSize;
-        gp.obj[3].worldY = 19 * gp.tileSize;
+        for (int i = 400; i < 600; i++){
+            gp.obj[i] = new OBJ_InvisibleWall(gp);
+            gp.obj[i].worldX = gp.tileSize * 225;
+            gp.obj[i].worldY = gp.tileSize * (i-400+25);
+        }
 
-        gp.obj[4] = new OBJ_Door(gp);
-        gp.obj[4].worldX = 24 * gp.tileSize;
-        gp.obj[4].worldY = 19 * gp.tileSize;
+        for (int i = 600; i < 800; i++){
+            gp.obj[i] = new OBJ_InvisibleWall(gp);
+            gp.obj[i].worldX = gp.tileSize * (i-600+25);
+            gp.obj[i].worldY = gp.tileSize * 225;
+        }
 
-        gp.obj[5] = new OBJ_Door(gp);
-        gp.obj[5].worldX = 12 * gp.tileSize;
-        gp.obj[5].worldY = 22 * gp.tileSize;
-
-        gp.obj[5] = new OBJ_Boots(gp);
-        gp.obj[5].worldX = 22 * gp.tileSize;
-        gp.obj[5].worldY = 24 * gp.tileSize;*/
-
-        gp.obj[0] = new OBJ_Exp_Crystal(gp);
-        gp.obj[0].worldX = gp.tileSize * 101;
-        gp.obj[0].worldY = gp.tileSize * 101;
-
+        gp.obj[801] = new OBJ_Letter(gp, "The time had now come for the performance of the last act\nof the tragedy. It was dark, and, as the Greve was imperfectly\nlighted, lanterns had been provided on the scaffold.\n--Charles-Henri Sanson, Memoirs of the Sansons");
+        gp.obj[801].worldX = gp.tileSize*126;
+        gp.obj[801].worldY = gp.tileSize*126;
     }
 
     public void setNPC(){

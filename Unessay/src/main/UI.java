@@ -105,6 +105,11 @@ public class UI {
             drawExpBar();
             drawLevelupScreen();
         }
+        //GAME OVER
+        if(gp.gameState == gp.endState){
+            commandNum = 0;
+            drawEndScreen();
+        }
     }
 
     public void drawExpBar(){
@@ -343,7 +348,7 @@ public class UI {
             g2.drawRoundRect(x+25, y+25, gp.tileSize*3, gp.tileSize*3, 15, 15);
         }
 
-        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
+        g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 24F));
         x += gp.tileSize*4;
         y += gp.tileSize;
 
@@ -449,6 +454,41 @@ public class UI {
         g2.drawString(value, textX, textY);
         textY += lineHeight;
 
+    }
+
+    public void drawEndScreen(){
+        //BACKGROUND
+        g2.setColor(new Color(67, 23, 35));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+        //TITLE NAME
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 96F));
+        String text = "GAME OVER";
+        int x = getXForCenteredText(text);
+        int y = gp.tileSize*3;
+        
+        //SHADOW
+        g2.setColor(new Color(0, 1, 0));
+        g2.drawString(text, x+5, y+5);
+        //MAIN COLOR
+        g2.setColor(new Color(146, 142, 128));
+        g2.drawString(text, x, y);
+
+        //CHS IMAGE
+        x = gp.screenWidth/2 - (gp.tileSize*4)/2;
+        y += gp.tileSize * 1.5;
+        g2.drawImage(gp.player.right0, x, y, gp.tileSize*4, gp.tileSize*4, null);
+
+        //MENU
+        g2.setFont(g2.getFont().deriveFont(Font.BOLD, 36F));
+
+        text = "PLAY AGAIN?";
+        x = getXForCenteredText(text);
+        y += gp.tileSize*6;
+        g2.drawString(text, x, y);
+        if(commandNum == 0){
+            g2.drawString(">", x-gp.tileSize, y);
+        }
     }
 
     public void drawLevelupScreen(){

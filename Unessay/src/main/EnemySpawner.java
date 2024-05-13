@@ -8,21 +8,22 @@ import object.OBJ_Exp_Crystal;
 public class EnemySpawner {
 
     GamePanel gp;
-    int maxEnemies, difficulty, spawnTimer; //maybe implement scaling based on difficulty later
+    int maxEnemies, difficulty, spawnTimer, difficultyCounter; //maybe implement scaling based on difficulty later
     UtilityTool utool = new UtilityTool();
 
     public EnemySpawner(GamePanel gp){
         this.gp = gp;
         maxEnemies = 30;
-        difficulty = 1;
+        difficulty = 0;
     }
 
     public int spawnEnemy(){//spawns an enemy if a certain amount of frames have passed, can change based on difficulty
         //spawns an enemy slightly offscreen based on direction player is moving
         spawnTimer++;
+        difficultyCounter++;
 
-        if(spawnTimer >= 100/difficulty && gp.enemies.size() != maxEnemies){
-            gp.enemies.add(new ENE_sansCulotte(gp));
+        if(spawnTimer >= 300/(difficulty+1) && gp.enemies.size() != maxEnemies){
+            gp.enemies.add(new ENE_sansCulotte(gp, difficulty));
             int i = gp.enemies.size()-1;
 
             int x, y;
@@ -115,13 +116,18 @@ public class EnemySpawner {
             spawnTimer = 0;
             return i;
         }
+
+        if((difficultyCounter/60) != 0 && (difficultyCounter/60) % 600 == 0) {
+            difficulty++;
+            System.out.println("Difficulty increased, counter = " + difficultyCounter);
+        }
         return -1;
     }
 
     public int spawnEnemyFast(){ //same as spawnEnemy but without the spawnTimer
 
         if(gp.enemies.size() != maxEnemies){
-            gp.enemies.add(new ENE_sansCulotte(gp));
+            gp.enemies.add(new ENE_sansCulotte(gp, difficulty));
             int i = gp.enemies.size()-1;
 
             int x, y;

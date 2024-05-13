@@ -259,9 +259,6 @@ public class Entity {
                 changeAlpha(g2, 1f);
                 g2.drawImage(image, screenX, screenY, null);
 
-                //DEBUG
-                g2.setColor(Color.red);
-                g2.drawRect(screenX + 12, screenY + 12, 29, 41);
             }
             if (hit == true){
 

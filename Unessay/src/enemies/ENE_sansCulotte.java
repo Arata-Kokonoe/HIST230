@@ -21,11 +21,35 @@ public class ENE_sansCulotte extends Entity{
         direction = "right";
         leftOrRight = "right";
         speed = 1;
-        maxLife = 20;
+        maxLife = 5;
         life = maxLife;
         damage = 5;
         damageMultiplier = 1;
         damageReduction = 0;
+
+        hitbox[0] = new Rectangle(12, 12, 24, 36);
+        hitboxDefaultX = hitbox[0].x;
+        hitboxDefaultY = hitbox[0].y;
+
+        getImage();
+    }
+
+    public ENE_sansCulotte(GamePanel gp, int difficulty){
+        super(gp);
+
+        this.gp = gp;
+        hitbox = new Rectangle[1];
+
+        type = 2;
+        name = "Sans-culotte";
+        direction = "right";
+        leftOrRight = "right";
+        speed = 1 + (int)(0.5 * difficulty);
+        maxLife = 5 + 5 * difficulty;
+        life = maxLife;
+        damage = 5 + 1 * difficulty;
+        damageMultiplier = 1;
+        damageReduction = 0 + (0.1 * difficulty);
 
         hitbox[0] = new Rectangle(12, 12, 24, 36);
         hitboxDefaultX = hitbox[0].x;

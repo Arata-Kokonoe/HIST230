@@ -53,8 +53,8 @@ public class Player extends Entity{
 
     public void setDefaultValues(){
 
-        worldX = gp.tileSize * 100;
-        worldY = gp.tileSize * 100;
+        worldX = gp.tileSize * 125;
+        worldY = gp.tileSize * 125;
         speed = 2;
         direction = "right";
         leftOrRight = "right";
@@ -293,6 +293,12 @@ public class Player extends Entity{
             }
         }
 
+        if(life <= 0){
+            gp.gameState = gp.endState;
+            setDefaultValues();
+            gp.enemies.clear();
+            gp.ui.playTime = 0;
+        }
     }
 
     public void updateDialogue(){

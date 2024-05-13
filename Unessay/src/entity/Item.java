@@ -32,6 +32,7 @@ public class Item extends Entity{
     public final int CAKE_PASSTYPE = 2;
     public final int MANUAL_PASSTYPE = 3;
     public final int SPOON_PASSTYPE = 4;
+    public final int BATHWATER_PASSTYPE = 5;
     public String description;
 
     public Item(GamePanel gp){

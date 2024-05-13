@@ -3,6 +3,8 @@ package main;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import entity.Player;
+
 public class KeyHandler implements KeyListener{
 
     GamePanel gp;
@@ -40,6 +42,9 @@ public class KeyHandler implements KeyListener{
 
         //LEVELUP STATE
         else if (gp.gameState == gp.levelupState) levelupState(code);
+
+        //GAME OVER
+        else if (gp.gameState == gp.endState) endState(code);
     }
 
     public void titleState(int code){
@@ -105,9 +110,9 @@ public class KeyHandler implements KeyListener{
             interactPressed = true;
             System.out.println("interactPressed = true");
         }
-        if (code == KeyEvent.VK_C){
+        /*if (code == KeyEvent.VK_C){
             gp.gameState = gp.characterState;
-        }
+        }*/
 
         // DEBUG
         if(code == KeyEvent.VK_T){
@@ -195,6 +200,12 @@ public class KeyHandler implements KeyListener{
             }
             gp.gameState = gp.playState;
             gp.player.applyPassives();
+        }
+    }
+
+    public void endState(int code){
+        if(code == KeyEvent.VK_SPACE){
+            gp.gameState = gp.titleState;
         }
     }
 

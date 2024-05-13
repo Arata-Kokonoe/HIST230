@@ -6,6 +6,7 @@ import java.util.Random;
 import entity.Item;
 import items.Armor;
 import items.Badge;
+import items.Bathwater;
 import items.Boots;
 import items.Cake;
 import items.Flintlock;
@@ -25,7 +26,7 @@ public class ItemHandler{
     //PLAYER UPGRADES
     public Item[] upgradeChoices;
     public ArrayList<Item> availableUpgrades;
-    public final int MAX_WEAPONS = 6;
+    public final int MAX_WEAPONS = 4;
     public final int MAX_PASSIVES = 6;
     public final int MAX_UPGRADE_CHOICES = 4;
 
@@ -41,6 +42,7 @@ public class ItemHandler{
     public final int CAKE_PASSTYPE = 2;
     public final int MANUAL_PASSTYPE = 3;
     public final int SPOON_PASSTYPE = 4;
+    public final int BATHWATER_PASSTYPE = 5;
     
     public ItemHandler (GamePanel gp){
         this.gp = gp;
@@ -94,10 +96,10 @@ public class ItemHandler{
                 weapon = new Flintlock(gp);
                 break;
             case 4:
-                weapon = new Flintlock(gp);
+                weapon = new Sword(gp);
                 break;
             case 5:
-                weapon = new Flintlock(gp);
+                weapon = new Badge(gp);
                 break;
             default:
                 System.out.println("Unexpected result in createWeapon");
@@ -126,8 +128,8 @@ public class ItemHandler{
             case SPOON_PASSTYPE:
                 passive = new Spoon(gp);
                 break;
-            case 5:
-                passive = new Boots(gp);
+            case BATHWATER_PASSTYPE:
+                passive = new Bathwater(gp);
                 break;
             default:
                 System.out.println("Unexpected result in createWeapon");
