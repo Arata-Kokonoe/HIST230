@@ -25,8 +25,10 @@ public class Badge extends Entity{
         damage = 1;
         name = "Executioner's Badge";
         description = "Creates a damaging zone around you!\nNo one would want to touch an executioner lest they\nwant to get cursed for a lifetime...";
-        passOrWeap = 1;
-        weapType = 1;
+
+        passOrWeap = WEAPON_NUM;
+        weapType = BADGE_WEAPTYPE;
+        
         getImage();
     }
 

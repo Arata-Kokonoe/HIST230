@@ -16,8 +16,10 @@ public class Boots extends Entity{
 
         name = "Boots";
         description = "Increases your movespeed!";
-        passType = 1;
-        passOrWeap = 0;
+        
+        passOrWeap = PASSIVE_NUM;
+        passType = BOOTS_PASSTYPE;
+        
         getImage();
     }
 

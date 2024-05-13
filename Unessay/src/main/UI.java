@@ -84,7 +84,8 @@ public class UI {
             drawTimer();
             drawPlayerLife();
             drawExpBar();
-            drawMessage();
+            drawInventory();
+            drawMessageLog();
             utool.changeAlpha(g2, 0f);
         }
         //PAUSE STATE
@@ -145,7 +146,33 @@ public class UI {
         g2.draw(new Line2D.Double(x, y, x + width, y));
     }
 
-    public void drawMessage(){
+    public void drawInventory(){
+
+        int x = gp.tileSize/2;
+        int initX = x;
+        int y = gp.tileSize + gp.tileSize/4;
+
+        int width = gp.tileSize;
+        int height = gp.tileSize;
+
+        for (int i = 0; i < gp.player.MAX_PASSIVES; i++){
+            drawSubWindow(x, y, width, height);
+            if(gp.player.currentPassives[i] != null) g2.drawImage(gp.player.currentPassives[i].icon, x, y, null);
+            x += gp.tileSize + gp.tileSize/4;
+        }
+
+        x = initX;
+        y += gp.tileSize + gp.tileSize/4;
+        for(int i = 0; i < gp.player.MAX_WEAPONS; i++){
+            drawSubWindow(x, y, width, height);
+            if(gp.player.currentWeapons[i] != null) g2.drawImage(gp.player.currentWeapons[i].icon, x, y, null);
+            x += gp.tileSize + gp.tileSize/4;
+        }
+
+
+    }
+
+    public void drawMessageLog(){
         int messageX = gp.tileSize;
         int messageY = gp.tileSize*4;
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 32F));
@@ -314,6 +341,11 @@ public class UI {
         int width = gp.screenWidth - (gp.tileSize*4);
         int height = gp.tileSize*4;
         drawSubWindow(x, y, width, height);
+
+        if(currentCloseup != null){
+            g2.drawImage(utool.scaleImage(currentCloseup, 144, 144), x+25, y+25, null);
+            g2.drawRoundRect(x+25, y+25, gp.tileSize*3, gp.tileSize*3, 15, 15);
+        }
 
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 32F));
         x += gp.tileSize*4;
@@ -488,14 +520,22 @@ public class UI {
         g2.fillRoundRect(x, y, width, height, 35, 35);
 
         c = new Color(255, 255, 255);
-            g2.setColor(c);
-            g2.setStroke(new BasicStroke(5)); //width of outlines of graphics
-            g2.drawRoundRect(x+5, y+5, width-10, height-10, 25, 25);
+        g2.setColor(c);
+        g2.setStroke(new BasicStroke(5)); //width of outlines of graphics
+        g2.drawRoundRect(x+5, y+5, width-10, height-10, 25, 25);
 
-        if(currentCloseup != null){
-            g2.drawImage(utool.scaleImage(currentCloseup, 144, 144), x+25, y+25, null);
-            g2.drawRoundRect(x+25, y+25, gp.tileSize*3, gp.tileSize*3, 15, 15);
-        }
+    }
+
+    public void drawSubWindow(int x, int y, int width, int height, int stroke){
+        Color c = new Color(0,0,0, 210); //4th number is alpha number (opacity level)
+        g2.setColor(c);
+        g2.fillRoundRect(x, y, width, height, 35, 35);
+
+        c = new Color(255, 255, 255);
+        g2.setColor(c);
+        g2.setStroke(new BasicStroke(stroke)); //width of outlines of graphics
+        g2.drawRoundRect(x+5, y+5, width-10, height-10, 25, 25);
+
     }
 
     public int getXForCenteredText(String text){

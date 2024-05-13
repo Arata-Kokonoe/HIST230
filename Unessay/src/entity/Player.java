@@ -31,6 +31,10 @@ public class Player extends Entity{
     public Entity[] upgradeChoices;
     public ArrayList<Entity> availableUpgrades;
 
+    public final int MAX_WEAPONS = 6;
+    public final int MAX_PASSIVES = 6;
+    public final int MAX_UPGRADE_CHOICES = 4;
+
     public Entity[] currentWeapons;
     public Entity[] currentPassives;
 
@@ -65,9 +69,9 @@ public class Player extends Entity{
         speed = 2;
         direction = "right";
         leftOrRight = "right";
-        currentWeapons = new Entity[6];
-        currentPassives = new Entity[6];
-        upgradeChoices = new Entity[4];
+        currentWeapons = new Entity[MAX_WEAPONS];
+        currentPassives = new Entity[MAX_PASSIVES];
+        upgradeChoices = new Entity[MAX_UPGRADE_CHOICES];
         availableUpgrades = new ArrayList<Entity>();
 
         for (int i = 0; i < gp.itemH.maxTypes; i++){

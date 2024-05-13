@@ -30,8 +30,10 @@ public class Sword extends Entity{
         description = "Slashes to your left and right!\nThe three holes at its tip are said to make the sword\n\"sing\" as it is swung.";
         //source: https://www.academia.edu/3220162/Executoner_s_Swords_their_Form_and_Development._Brief_summary
         //and from https://www.youtube.com/watch?v=nyZxA9soDzE
-        passOrWeap = 1;
-        weapType = 0;
+
+        passOrWeap = WEAPON_NUM;
+        weapType = SWORD_WEAPTYPE;
+        
         getImage();
         hitbox[0] = new Rectangle();
         hitbox[1] = new Rectangle();

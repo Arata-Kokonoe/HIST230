@@ -17,8 +17,10 @@ public class Armor extends Entity{
         name = "Armor";
         description = "Reduces your damage taken by 20%!";
         level = 1;
-        passType = 0;
-        passOrWeap = 0;
+
+        passOrWeap = ARMOR_PASSTYPE;
+        passType = PASSIVE_NUM;
+        
         getImage();
     }
 

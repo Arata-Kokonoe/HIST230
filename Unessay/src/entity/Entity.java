@@ -75,8 +75,17 @@ public class Entity {
 
     //ITEM ATTRIBUTE
     public int passOrWeap;
+    public final int PASSIVE_NUM = 0;
+    public final int WEAPON_NUM = 1;
     public int weapType;
+    public final int SWORD_WEAPTYPE = 0;
+    public final int BADGE_WEAPTYPE = 1;
     public int passType;
+    public final int ARMOR_PASSTYPE = 0;
+    public final int BOOTS_PASSTYPE = 1;
+    public final int CAKE_PASSTYPE = 2;
+    public final int MANUAL_PASSTYPE = 3;
+    public final int SPOON_PASSTYPE = 4;
     public String description;
     public double size = 1.0;
 

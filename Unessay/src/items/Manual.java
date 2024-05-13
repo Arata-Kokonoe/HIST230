@@ -14,8 +14,10 @@ public class Manual extends Entity{
 
         name = "Weapon Manual";
         description = "Makes your weapons attack faster!";
-        passOrWeap = 0;
-        passType = 3;
+
+        passOrWeap = PASSIVE_NUM;
+        passType = MANUAL_PASSTYPE;
+        
         getImage();
     }
 

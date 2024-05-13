@@ -14,11 +14,23 @@ import items.Spoon;
 import items.Sword;
 
 public class ItemHandler{
-    BufferedImage icon;
+
     GamePanel gp;
-    public int weaponType;
-    final public int maxTypes = 6;
     UtilityTool utool = new UtilityTool();
+
+    public int weaponType;
+    final public int maxTypes = 6; //max weapons/passives
+
+    //WEAPONS
+    public final int SWORD_WEAPTYPE = 0;
+    public final int BADGE_WEAPTYPE = 1;
+
+    //PASSIVES
+    public final int ARMOR_PASSTYPE = 0;
+    public final int BOOTS_PASSTYPE = 1;
+    public final int CAKE_PASSTYPE = 2;
+    public final int MANUAL_PASSTYPE = 3;
+    public final int SPOON_PASSTYPE = 4;
     
     public ItemHandler (GamePanel gp){
         this.gp = gp;
@@ -28,10 +40,10 @@ public class ItemHandler{
         Entity weapon;
 
         switch(type){
-            case 0:
+            case SWORD_WEAPTYPE:
                 weapon = new Sword(gp);
                 break;
-            case 1:
+            case BADGE_WEAPTYPE:
                 weapon = new Badge(gp);
                 break;
             case 2:
@@ -55,23 +67,22 @@ public class ItemHandler{
     }
 
     public Entity createPassive(int type){ //based on type passed in, create a passive
-
         Entity passive;
 
         switch(type){
-            case 0:
+            case ARMOR_PASSTYPE:
                 passive = new Armor(gp);
                 break;
-            case 1:
+            case BOOTS_PASSTYPE:
                 passive = new Boots(gp);
                 break;
-            case 2:
+            case CAKE_PASSTYPE:
                 passive = new Cake(gp);
                 break;
-            case 3:
+            case MANUAL_PASSTYPE:
                 passive = new Manual(gp);
                 break;
-            case 4:
+            case SPOON_PASSTYPE:
                 passive = new Spoon(gp);
                 break;
             case 5:

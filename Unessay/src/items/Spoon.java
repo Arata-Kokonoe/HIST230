@@ -15,8 +15,10 @@ public class Spoon extends Entity{
 
         name = "The Special Spoon";
         description = "Increases the size of your attacks!";
-        passOrWeap = 0;
-        passType = 4;
+
+        passOrWeap = PASSIVE_NUM;
+        passType = SPOON_PASSTYPE;
+        
         getImage();
     }
 

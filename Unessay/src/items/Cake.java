@@ -14,8 +14,10 @@ public class Cake extends Entity{
 
         name = "Cake";
         description = "Increases your damage!\nEnrage the Sans-culottes";
-        passOrWeap = 0;
-        passType = 2;
+
+        passOrWeap = PASSIVE_NUM;
+        passType = CAKE_PASSTYPE;
+        
         getImage();
     }
 
