@@ -28,15 +28,15 @@ public class Player extends Entity{
     public final int screenY;
     public int standCounter;
     public boolean attackCanceled = false;
-    public Entity[] upgradeChoices;
-    public ArrayList<Entity> availableUpgrades;
+    public Item[] upgradeChoices;
+    public ArrayList<Item> availableUpgrades;
 
     public final int MAX_WEAPONS = 6;
     public final int MAX_PASSIVES = 6;
     public final int MAX_UPGRADE_CHOICES = 4;
 
-    public Entity[] currentWeapons;
-    public Entity[] currentPassives;
+    public Item[] currentWeapons;
+    public Item[] currentPassives;
 
     //public int hasKey = 0;
 
@@ -69,10 +69,10 @@ public class Player extends Entity{
         speed = 2;
         direction = "right";
         leftOrRight = "right";
-        currentWeapons = new Entity[MAX_WEAPONS];
-        currentPassives = new Entity[MAX_PASSIVES];
-        upgradeChoices = new Entity[MAX_UPGRADE_CHOICES];
-        availableUpgrades = new ArrayList<Entity>();
+        currentWeapons = new Item[MAX_WEAPONS];
+        currentPassives = new Item[MAX_PASSIVES];
+        upgradeChoices = new Item[MAX_UPGRADE_CHOICES];
+        availableUpgrades = new ArrayList<Item>();
 
         for (int i = 0; i < gp.itemH.maxTypes; i++){
             availableUpgrades.add(gp.itemH.createPassive(i));
@@ -98,35 +98,24 @@ public class Player extends Entity{
         Random rand = new Random();
 
         upgradeChoices[0] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
+        Item temp1 = availableUpgrades.get(availableUpgrades.indexOf(upgradeChoices[0]));
         availableUpgrades.remove(availableUpgrades.indexOf(upgradeChoices[0]));
+
         upgradeChoices[1] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
+        Item temp2 = availableUpgrades.get(availableUpgrades.indexOf(upgradeChoices[1]));
         availableUpgrades.remove(availableUpgrades.indexOf(upgradeChoices[1]));
+
         upgradeChoices[2] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
+        Item temp3 = availableUpgrades.get(availableUpgrades.indexOf(upgradeChoices[2]));
         availableUpgrades.remove(availableUpgrades.indexOf(upgradeChoices[2]));
 
         if(luck >= 1){
             upgradeChoices[3] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
         }
         
-        if(upgradeChoices[0].passOrWeap == 0){
-            availableUpgrades.add(gp.itemH.createPassive(upgradeChoices[0].passType));
-        }
-        else{
-            availableUpgrades.add(gp.itemH.createWeapon(upgradeChoices[0].weapType));
-        }
-        if(upgradeChoices[1].passOrWeap == 0){
-            availableUpgrades.add(gp.itemH.createPassive(upgradeChoices[1].passType));
-        }
-        else{
-            availableUpgrades.add(gp.itemH.createWeapon(upgradeChoices[1].weapType));
-        }
-        if(upgradeChoices[2].passOrWeap == 0){
-            availableUpgrades.add(gp.itemH.createPassive(upgradeChoices[2].passType));
-        }
-        else{
-            availableUpgrades.add(gp.itemH.createWeapon(upgradeChoices[2].weapType));
-        }
-
+        availableUpgrades.add(temp1);
+        availableUpgrades.add(temp2);
+        availableUpgrades.add(temp3);
     }
 
     public void getPlayerImage(){
@@ -343,6 +332,7 @@ public class Player extends Entity{
                 invincibleCounter = 0;
             }
         }
+
     }
 
     public void updateDialogue(){
@@ -360,11 +350,10 @@ public class Player extends Entity{
 
             switch(objectName){
                 case "Exp Crystal":
-                    //gp.playSE(1);
                     exp++;
                     checkLevelUp();
                     gp.obj[i].alive = false;
-                    gp.ui.addMessage("You got 1 exp!");
+                    //gp.ui.addMessage("You got 1 exp!");
                     break;
             }
             /*String objectName = gp.obj[i].name;
@@ -464,7 +453,6 @@ public class Player extends Entity{
     public void contactEnemy(int i){
         if (i != 999){
             if(invincible == false && gp.enemies.get(i).alive == true && gp.enemies.get(i).dying == false){
-                //gp.playSE(5);
 
                 double damage = gp.enemies.get(i).damageMultiplier * (1-damageReduction);
                 if(damage < 0) damage = 0;
@@ -504,8 +492,7 @@ public class Player extends Entity{
             level++;
             nextLevelExp = (int)(nextLevelExp * 1.2);
             setUpgrades();
-        
-            //gp.playSE(8);
+    
             gp.gameState = gp.levelupState;
         }
 
@@ -530,7 +517,7 @@ public class Player extends Entity{
     public void drawWeapons(Graphics2D g2){
         for(int i = 0; i < currentWeapons.length; i++){
             if(currentWeapons[i] != null){
-                if(currentWeapons[i].weapType == SWORD_WEAPTYPE) currentWeapons[i].scaleImages();
+                currentWeapons[i].scaleImages();
                 currentWeapons[i].draw(g2);
             }
         }
@@ -593,6 +580,7 @@ public class Player extends Entity{
             changeAlpha(g2, 1f);
             g2.drawImage(image, screenX, screenY, null); //draw player
             drawWeapons(g2);
+
         }
 
         //reset alpha

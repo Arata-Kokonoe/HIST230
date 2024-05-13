@@ -151,7 +151,6 @@ public class KeyHandler implements KeyListener{
                 gp.ui.slotRow -= 3;
                 gp.ui.upgradeNum--;
                 System.out.println("upgradeNum = " + gp.ui.upgradeNum);
-                gp.playSE(9);
             }
         }    
         if(code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN){
@@ -163,7 +162,6 @@ public class KeyHandler implements KeyListener{
                     gp.ui.slotRow += 3;
                     gp.ui.upgradeNum++;
                     System.out.println("upgradeNum = " + gp.ui.upgradeNum);
-                    gp.playSE(9);
                 }
             }
         }      

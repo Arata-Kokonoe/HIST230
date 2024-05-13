@@ -3,9 +3,10 @@ package items;
 import java.awt.image.BufferedImage;
 
 import entity.Entity;
+import entity.Item;
 import main.GamePanel;
 
-public class Armor extends Entity{
+public class Armor extends Item{
     public int level;
     public GamePanel gp;
 

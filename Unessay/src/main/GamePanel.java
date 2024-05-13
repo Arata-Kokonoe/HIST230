@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import entity.Entity;
 import entity.Player;
+import entity.Projectile;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable{
@@ -57,6 +58,7 @@ public class GamePanel extends JPanel implements Runnable{
     public ArrayList<Entity> enemies = new ArrayList<Entity>();
     public Entity talkingEntity;
     public ArrayList<Entity> entityList = new ArrayList<>();
+    public ArrayList<Projectile> projectileList = new ArrayList<Projectile>();
 
 
     // GAME STATE
@@ -194,6 +196,16 @@ public class GamePanel extends JPanel implements Runnable{
                     enemies.remove(i);
                 }
             }
+
+            //Projectile
+            for(int i = 0; i < projectileList.size(); i++){
+                Entity projectile = projectileList.get(i);
+                if (projectile.alive == true){projectile.update();}
+                if (projectile.alive == false){
+                    projectile = null;
+                    projectileList.remove(i);
+                }
+            }
             
         }
         if(gameState == pauseState){
@@ -239,6 +251,10 @@ public class GamePanel extends JPanel implements Runnable{
             }
             for(int i = 0; i < enemies.size(); i++){
                 entityList.add(enemies.get(i));
+            }
+
+            for(int i = 0; i < projectileList.size(); i++){
+                entityList.add(projectileList.get(i));
             }
 
             //SORT

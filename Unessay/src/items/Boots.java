@@ -3,9 +3,10 @@ package items;
 import java.awt.image.BufferedImage;
 
 import entity.Entity;
+import entity.Item;
 import main.GamePanel;
 
-public class Boots extends Entity{
+public class Boots extends Item{
     public int level;
     public GamePanel gp;
 
@@ -16,7 +17,7 @@ public class Boots extends Entity{
 
         name = "Boots";
         description = "Increases your movespeed!";
-        
+
         passOrWeap = PASSIVE_NUM;
         passType = BOOTS_PASSTYPE;
         

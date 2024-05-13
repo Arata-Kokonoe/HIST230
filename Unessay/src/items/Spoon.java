@@ -1,9 +1,10 @@
 package items;
 
 import entity.Entity;
+import entity.Item;
 import main.GamePanel;
 
-public class Spoon extends Entity{
+public class Spoon extends Item{
 
     public int level;
     public GamePanel gp;
@@ -14,7 +15,7 @@ public class Spoon extends Entity{
         level = 1;
 
         name = "The Special Spoon";
-        description = "Increases the size of your attacks!";
+        description = "Increases the size of your attacks!\nExecutioners often had a special spoon they would\nbring to the marketplace to collect their havage rights\n without \"contaiminating\" the vendors";
 
         passOrWeap = PASSIVE_NUM;
         passType = SPOON_PASSTYPE;

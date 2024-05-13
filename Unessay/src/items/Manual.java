@@ -1,9 +1,10 @@
 package items;
 
 import entity.Entity;
+import entity.Item;
 import main.GamePanel;
 
-public class Manual extends Entity{
+public class Manual extends Item{
     public int level;
     public GamePanel gp;
 
@@ -17,7 +18,7 @@ public class Manual extends Entity{
 
         passOrWeap = PASSIVE_NUM;
         passType = MANUAL_PASSTYPE;
-        
+
         getImage();
     }
 
@@ -30,19 +31,19 @@ public class Manual extends Entity{
         if(applied == false){
             switch(level){
                 case 1:
-                    gp.player.cooldown += 0.15;
+                    gp.player.cooldownReduction += 0.15;
                     break;
                 case 2:
-                    gp.player.cooldown += 0.15;
+                    gp.player.cooldownReduction += 0.15;
                     break;
                 case 3:
-                    gp.player.cooldown += 0.1;
+                    gp.player.cooldownReduction += 0.1;
                     break;
                 case 4:
-                    gp.player.cooldown += 0.1;
+                    gp.player.cooldownReduction += 0.1;
                     break;
                 case 5:
-                    gp.player.cooldown += 0.05;
+                    gp.player.cooldownReduction += 0.05;
                     break;
             }
             applied = true;

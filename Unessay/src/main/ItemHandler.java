@@ -5,10 +5,13 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 import entity.Entity;
+import entity.Item;
 import items.Armor;
 import items.Badge;
 import items.Boots;
 import items.Cake;
+import items.Flintlock;
+import items.Guillotine;
 import items.Manual;
 import items.Spoon;
 import items.Sword;
@@ -24,6 +27,8 @@ public class ItemHandler{
     //WEAPONS
     public final int SWORD_WEAPTYPE = 0;
     public final int BADGE_WEAPTYPE = 1;
+    public final int GUILLOTINE_WEAPTYPE = 2;
+    public final int FLINTLOCK_WEAPTYPE = 3;
 
     //PASSIVES
     public final int ARMOR_PASSTYPE = 0;
@@ -36,8 +41,8 @@ public class ItemHandler{
         this.gp = gp;
     }
 
-    public Entity createWeapon(int type){ //based on type passed in, create a weapon
-        Entity weapon;
+    public Item createWeapon(int type){ //based on type passed in, create a weapon
+        Item weapon;
 
         switch(type){
             case SWORD_WEAPTYPE:
@@ -46,17 +51,17 @@ public class ItemHandler{
             case BADGE_WEAPTYPE:
                 weapon = new Badge(gp);
                 break;
-            case 2:
-                weapon = new Sword(gp);
+            case GUILLOTINE_WEAPTYPE:
+                weapon = new Guillotine(gp);
                 break;
-            case 3:
-                weapon = new Badge(gp);
+            case FLINTLOCK_WEAPTYPE:
+                weapon = new Flintlock(gp);
                 break;
             case 4:
-                weapon = new Sword(gp);
+                weapon = new Flintlock(gp);
                 break;
             case 5:
-                weapon = new Badge(gp);
+                weapon = new Flintlock(gp);
                 break;
             default:
                 System.out.println("Unexpected result in createWeapon");
@@ -66,8 +71,8 @@ public class ItemHandler{
         return weapon;
     }
 
-    public Entity createPassive(int type){ //based on type passed in, create a passive
-        Entity passive;
+    public Item createPassive(int type){ //based on type passed in, create a passive
+        Item passive;
 
         switch(type){
             case ARMOR_PASSTYPE:

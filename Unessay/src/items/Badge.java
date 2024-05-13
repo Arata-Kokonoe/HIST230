@@ -8,13 +8,13 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 
 import entity.Entity;
+import entity.Item;
 import main.GamePanel;
 
-public class Badge extends Entity{
+public class Badge extends Item{
 
     public GamePanel gp;
     public int level;
-    public int attackCounter = 0;
 
     public Badge(GamePanel gp){
         super(gp);
@@ -42,7 +42,7 @@ public class Badge extends Entity{
 
     public void attack(){
         attackCounter++;
-        weaponHitCounter++;
+
         for(int i = 0; i < enemiesHit.size(); i++){
             enemiesHitTimer.set(i, enemiesHitTimer.get(i) + 1);
             if(enemiesHitTimer.get(i) >= 14){
@@ -53,71 +53,45 @@ public class Badge extends Entity{
         }
 
         if(attackCounter == 15){
-            switch (level){
-                case 1:
-                    System.out.println("Attack!");
-                    roundHitbox.x = (gp.player.worldX - baseSize*gp.player.sizeMultiplier); 
-                    roundHitbox.width = (baseSize*gp.player.sizeMultiplier*3);  
-                    roundHitbox.y = (gp.player.worldY - baseSize*gp.player.sizeMultiplier);
-                    roundHitbox.height = (baseSize*gp.player.sizeMultiplier*3);
-                    break;
-                case 2:
-                    damage++;
-                    roundHitbox.x = (gp.player.worldX - baseSize*gp.player.sizeMultiplier); 
-                    roundHitbox.width = (baseSize*gp.player.sizeMultiplier*3);  
-                    roundHitbox.y = (gp.player.worldY - baseSize*gp.player.sizeMultiplier);
-                    roundHitbox.height = (baseSize*gp.player.sizeMultiplier*3);
-                    break;
-                case 3:
-                    damage++;
-                    roundHitbox.x = (gp.player.worldX - baseSize*gp.player.sizeMultiplier); 
-                    roundHitbox.width = (baseSize*gp.player.sizeMultiplier*3);  
-                    roundHitbox.y = (gp.player.worldY - baseSize*gp.player.sizeMultiplier);
-                    roundHitbox.height = (baseSize*gp.player.sizeMultiplier*3);
-                    break;
-                case 4:
-                    roundHitbox.x = (gp.player.worldX - baseSize*gp.player.sizeMultiplier); 
-                    roundHitbox.width = (baseSize*gp.player.sizeMultiplier*3);  
-                    roundHitbox.y = (gp.player.worldY - baseSize*gp.player.sizeMultiplier);
-                    roundHitbox.height = (baseSize*gp.player.sizeMultiplier*3);
-                    break;
-                case 5:
-                    roundHitbox.x = (gp.player.worldX - baseSize*gp.player.sizeMultiplier); 
-                    roundHitbox.width = (baseSize*gp.player.sizeMultiplier*3);  
-                    roundHitbox.y = (gp.player.worldY - baseSize*gp.player.sizeMultiplier);
-                    roundHitbox.height = (baseSize*gp.player.sizeMultiplier*3);
-                    break;
-                case 6:
-                    roundHitbox.x = (gp.player.worldX - baseSize*gp.player.sizeMultiplier); 
-                    roundHitbox.width = (baseSize*gp.player.sizeMultiplier*3);  
-                    roundHitbox.y = (gp.player.worldY - baseSize*gp.player.sizeMultiplier);
-                    roundHitbox.height = (baseSize*gp.player.sizeMultiplier*3);
-                    break;
-                case 7:
-                    roundHitbox.x = (gp.player.worldX - baseSize*gp.player.sizeMultiplier); 
-                    roundHitbox.width = (baseSize*gp.player.sizeMultiplier*3);  
-                    roundHitbox.y = (gp.player.worldY - baseSize*gp.player.sizeMultiplier);
-                    roundHitbox.height = (baseSize*gp.player.sizeMultiplier*3);
-                    break;
-                case 8:
-                    roundHitbox.x = (gp.player.worldX - baseSize*gp.player.sizeMultiplier); 
-                    roundHitbox.width = (baseSize*gp.player.sizeMultiplier*3);  
-                    roundHitbox.y = (gp.player.worldY - baseSize*gp.player.sizeMultiplier);
-                    roundHitbox.height = (baseSize*gp.player.sizeMultiplier*3);
-                    break;
-            }
+            roundHitbox.x = (gp.player.worldX - baseSize*gp.player.sizeMultiplier); 
+            roundHitbox.width = (baseSize*gp.player.sizeMultiplier*3);  
+            roundHitbox.y = (gp.player.worldY - baseSize*gp.player.sizeMultiplier);
+            roundHitbox.height = (baseSize*gp.player.sizeMultiplier*3);
 
             gp.cChecker.checkRoundWeaponHit(this, gp.enemies);
             attackCounter = 0;
         }
 
-        if (weaponHitCounter >= 10) weaponHitCounter = 0;
 
     }
 
     public void checkLevelUp(){
         if(level < 8) {
             level++;
+            switch (level){
+                case 2:
+                    damage++;
+                    break;
+                case 3:
+                    baseSize += 24;
+                    damage++;
+                    break;
+                case 4:
+                    damage++;
+                    break;
+                case 5:
+                    damage++;
+                    break;
+                case 6:
+                    damage++;
+                    break;
+                case 7:
+                    damage++;
+                    break;
+                case 8:
+                    damage++;
+                    break;
+            }
             applied = false;
         }
         if(level == 8){
@@ -136,7 +110,10 @@ public class Badge extends Entity{
         int screenY = (int)(gp.player.screenY - baseSize*gp.player.sizeMultiplier);
 
         g2.setColor(new Color(0, 0, 0, 125));
-        g2.fillOval(screenX, screenY, (int)(baseSize*gp.player.sizeMultiplier*3), (int)(48*gp.player.sizeMultiplier*3));
+        g2.fillOval(screenX, screenY, (int)(baseSize*gp.player.sizeMultiplier*3), (int)(baseSize*gp.player.sizeMultiplier*3));
     }
 
+    public void scaleImages(){
+        
+    }
 }

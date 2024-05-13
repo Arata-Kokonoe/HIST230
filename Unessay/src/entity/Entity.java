@@ -23,14 +23,14 @@ public class Entity {
     public BufferedImage icon;
     public BufferedImage image;
     public Rectangle[] hitbox = new Rectangle[1];
-    public RoundRectangle2D.Double roundHitbox;
     public int hitboxDefaultX, hitboxDefaultY;
     public boolean collision = false;
     String dialogues[] = new String[20];
     public ArrayList<Entity> hitby = new ArrayList<Entity>();
-    public ArrayList<Entity> enemiesHit = new ArrayList<Entity>();
-    public ArrayList<Integer> enemiesHitTimer = new ArrayList<Integer>();
     public int xOffset, yOffset;
+    public int hitCounter = 0;
+    
+
     
     //STATE
     public int worldX;
@@ -46,14 +46,12 @@ public class Entity {
     public boolean attacking = false;
     public boolean alive = true;
     public boolean dying = false;
-    public boolean applied = false;
+
 
     //COUNTER
     public int spriteCounter = 0;
     public int actionLockCounter = 0;
     public int invincibleCounter = 0;
-    public int hitCounter = 0;
-    public int weaponHitCounter = 0;
     public int offscreenCounter = 0;
     int dyingCounter = 0;
     
@@ -68,27 +66,15 @@ public class Entity {
     public int damage;
     public double damageReduction;
     public double sizeMultiplier;
-    public int cooldown;
+    public int cooldownReduction;
     public int exp;
     public int nextLevelExp;
     public int coin;
     public int luck;
+    public int baseSize;
 
     //ITEM ATTRIBUTE
-    public int passOrWeap;
-    public final int PASSIVE_NUM = 0;
-    public final int WEAPON_NUM = 1;
-    public int weapType;
-    public final int SWORD_WEAPTYPE = 0;
-    public final int BADGE_WEAPTYPE = 1;
-    public int passType;
-    public final int ARMOR_PASSTYPE = 0;
-    public final int BOOTS_PASSTYPE = 1;
-    public final int CAKE_PASSTYPE = 2;
-    public final int MANUAL_PASSTYPE = 3;
-    public final int SPOON_PASSTYPE = 4;
-    public String description;
-    public int baseSize;
+
 
     public Entity (GamePanel gp){
         this.gp = gp;
@@ -134,7 +120,6 @@ public class Entity {
 
         if(this.type == 2 && contactPlayer == true && alive == true && dying == false){
             if(gp.player.invincible == false){
-                //gp.playSE(5);
                 double incomingDamage = damage * (1-gp.player.damageReduction);
                 if(incomingDamage < 0) incomingDamage = 0;
 
@@ -288,7 +273,7 @@ public class Entity {
                 //changeAlpha(g2, 1f);
                 g2.setColor(Color.black);
                 g2.setFont(g2.getFont().deriveFont(Font.ITALIC, 24f));
-                g2.drawString("" + lastDamageTaken, screenX + xOffset+5, screenY + yOffset+5);
+                g2.drawString("" + lastDamageTaken, screenX + xOffset+2, screenY + yOffset+2);
                 g2.setColor(Color.white);
                 g2.drawString("" + lastDamageTaken, screenX + xOffset, screenY + yOffset);
 
@@ -379,25 +364,19 @@ public class Entity {
         else return false;
     }
 
-    public void addEffect(){
-        System.out.println("this entity (" + this.name + ") has no addEffect method, overwrite method");
-    }
-    public void attack(){
-        System.out.println("this entity (" + this.name + ") has no attack method, overwrite method");
-    }
-
-    public void checkLevelUp(){
-        System.out.println("this entity (" + this.name + ") has no checkLevelUp method, overwrite method");
-    }
-
-    public void scaleImages(){
-        System.out.println("this entity (" + this.name + ") has no scaleImages method, overwrite method");
-    }
-
     public boolean equals(Entity other){
         if (name.contentEquals(other.name)) return true;
         else return false;
     }
+
+    public int getWidth(){
+        return hitbox[0].width;
+    }
+
+    public int getHeight(){
+        return hitbox[1].width;
+    }
+
 
 
 }

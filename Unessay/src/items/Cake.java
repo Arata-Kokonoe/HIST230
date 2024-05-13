@@ -1,9 +1,10 @@
 package items;
 
 import entity.Entity;
+import entity.Item;
 import main.GamePanel;
 
-public class Cake extends Entity{
+public class Cake extends Item{
     public int level;
     public GamePanel gp;
 
@@ -13,7 +14,7 @@ public class Cake extends Entity{
         level = 1;
 
         name = "Cake";
-        description = "Increases your damage!\nEnrage the Sans-culottes";
+        description = "Increases your damage!\nWeaken the starving Sans-culottes by showing off your \naccess to food due to your noble status!";
 
         passOrWeap = PASSIVE_NUM;
         passType = CAKE_PASSTYPE;
