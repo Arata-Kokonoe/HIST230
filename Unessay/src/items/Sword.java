@@ -7,19 +7,23 @@ import java.awt.image.BufferedImage;
 import entity.Entity;
 import main.GamePanel;
 import main.ItemHandler;
+import main.UtilityTool;
 
 public class Sword extends Entity{
 
     BufferedImage rightSlash, leftSlash;
 
     public GamePanel gp;
+    int baseAttackFrame = 0;
     public int level;
     public int attackCounter = 0;
-    public Rectangle hitbox2 = new Rectangle();
+    public final int baseSize = 48;
+    UtilityTool utool = new UtilityTool();
 
     public Sword(GamePanel gp){
         super(gp);
         this.gp = gp;
+        hitbox = new Rectangle[2];
         level = 1;
         damage = 1;
         name = "Executioner's Sword";
@@ -29,6 +33,8 @@ public class Sword extends Entity{
         passOrWeap = 1;
         weapType = 0;
         getImage();
+        hitbox[0] = new Rectangle();
+        hitbox[1] = new Rectangle();
     }
 
     public void getImage(){
@@ -41,125 +47,112 @@ public class Sword extends Entity{
 
     public void attack(){
         attackCounter++;
-        //System.out.println("attackCounter = " + attackCounter);
+        weaponHitCounter++;
+        for(int i = 0; i < enemiesHit.size(); i++){
+            enemiesHitTimer.set(i, enemiesHitTimer.get(i) + 1);
+            if(enemiesHitTimer.get(i) >= 10){
+                enemiesHit.remove(i);
+                enemiesHitTimer.remove(i);
+                if(i >= enemiesHit.size()) break;
+            }
+        }
 
         if(attackCounter == (int)(180 *(1-gp.player.cooldown))){
+            attacking = true;
             switch (level) {
                 case 1:
                     System.out.println("Attack!");
-                    hitbox.x = (int)(gp.player.worldX - 48*gp.player.size); //48 because rn base size is 48
-                    hitbox.width = (int)(48*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
-                    hitbox.y = (gp.player.worldY);
-                    hitbox.height = gp.tileSize;
-        
-                    gp.cChecker.checkWeaponHit(this, gp.enemies);
-                    gp.entityList.add(this);
-                    attackCounter = 0;
+                    hitbox[0].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[0].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[0].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[0].y = (gp.player.worldY + gp.tileSize - hitbox[0].height);
+                    
                     break;
                 case 2:
                     System.out.println("Attack!");
-                    hitbox.x = (int)(gp.player.worldX - 48*gp.player.size); //48 because rn base size is 48
-                    hitbox.width = (int)(48*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
-                    hitbox.y = (gp.player.worldY);
-                    hitbox.height = gp.tileSize;
-        
-                    gp.cChecker.checkWeaponHit(this, gp.enemies);
-                    gp.entityList.add(this);
-                    attackCounter = 0;
+                    hitbox[0].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[0].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[0].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[0].y = (gp.player.worldY + gp.tileSize - hitbox[0].height);
                     break;
                 case 3:
                     System.out.println("Attack!");
-                    hitbox.x = (int)(gp.player.worldX - 48*gp.player.size); //48 because rn base size is 48
-                    hitbox.width = (int)(48*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
-                    hitbox.y = (gp.player.worldY);
-                    hitbox.height = gp.tileSize;
-        
-                    gp.cChecker.checkWeaponHit(this, gp.enemies);
-                    gp.entityList.add(this);
-                    attackCounter = 0;
+                    hitbox[0].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[0].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[0].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[0].y = (gp.player.worldY + gp.tileSize - hitbox[0].height);
                     break;
                 case 4:
                     System.out.println("Attack!");
-                    hitbox.x = (int)(gp.player.worldX - 48*gp.player.size); //48 because rn base size is 48
-                    hitbox.width = (int)(48*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
-                    hitbox.y = (gp.player.worldY);
-                    hitbox.height = gp.tileSize;
+                    hitbox[0].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[0].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[0].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[0].y = (gp.player.worldY + gp.tileSize - hitbox[0].height);
 
-                    hitbox2.x = (int)(gp.player.worldX - 48*gp.player.size);
-                    hitbox2.width = (int)(48*gp.player.size*2 + gp.tileSize);
-                    hitbox2.y = (gp.player.worldY) - hitbox.height;
-                    hitbox2.height = gp.tileSize;
+                    hitbox[1].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[1].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[1].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[1].y = (hitbox[0].y - hitbox[1].height);
         
-                    gp.cChecker.checkWeaponHit(this, gp.enemies);
-                    gp.entityList.add(this);
-                    attackCounter = 0;
                     break;
                 case 5:
                     System.out.println("Attack!");
-                    hitbox.x = (int)(gp.player.worldX - 48*gp.player.size); //48 because rn base size is 48
-                    hitbox.width = (int)(48*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
-                    hitbox.y = (gp.player.worldY);
-                    hitbox.height = gp.tileSize;
+                    hitbox[0].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[0].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[0].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[0].y = (gp.player.worldY + gp.tileSize - hitbox[0].height);
 
-                    hitbox2.x = (int)(gp.player.worldX - 48*gp.player.size);
-                    hitbox2.width = (int)(48*gp.player.size*2 + gp.tileSize);
-                    hitbox2.y = (gp.player.worldY) - hitbox.height;
-                    hitbox2.height = gp.tileSize;
-        
-                    gp.cChecker.checkWeaponHit(this, gp.enemies);
-                    gp.entityList.add(this);
-                    attackCounter = 0;
+                    hitbox[1].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[1].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[1].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[1].y = (hitbox[0].y - hitbox[1].height);
                     break;
                 case 6:
                     System.out.println("Attack!");
-                    hitbox.x = (int)(gp.player.worldX - 48*gp.player.size); //48 because rn base size is 48
-                    hitbox.width = (int)(48*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
-                    hitbox.y = (gp.player.worldY);
-                    hitbox.height = gp.tileSize;
+                    hitbox[0].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[0].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[0].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[0].y = (gp.player.worldY + gp.tileSize - hitbox[0].height);
 
-                    hitbox2.x = (int)(gp.player.worldX - 48*gp.player.size);
-                    hitbox2.width = (int)(48*gp.player.size*2 + gp.tileSize);
-                    hitbox2.y = (gp.player.worldY) - hitbox.height;
-                    hitbox2.height = gp.tileSize;
-        
-                    gp.cChecker.checkWeaponHit(this, gp.enemies);
-                    gp.entityList.add(this);
-                    attackCounter = 0;
+                    hitbox[1].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[1].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[1].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[1].y = (hitbox[0].y - hitbox[1].height);
                     break;
                 case 7:
                     System.out.println("Attack!");
-                    hitbox.x = (int)(gp.player.worldX - 48*gp.player.size); //48 because rn base size is 48
-                    hitbox.width = (int)(48*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
-                    hitbox.y = (gp.player.worldY);
-                    hitbox.height = gp.tileSize;
+                    hitbox[0].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[0].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[0].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[0].y = (gp.player.worldY + gp.tileSize - hitbox[0].height);
 
-                    hitbox2.x = (int)(gp.player.worldX - 48*gp.player.size);
-                    hitbox2.width = (int)(48*gp.player.size*2 + gp.tileSize);
-                    hitbox2.y = (gp.player.worldY) - hitbox.height;
-                    hitbox2.height = gp.tileSize;
-        
-                    gp.cChecker.checkWeaponHit(this, gp.enemies);
-                    gp.entityList.add(this);
-                    attackCounter = 0;
+                    hitbox[1].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[1].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[1].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[1].y = (hitbox[0].y - hitbox[1].height);
                     break;
                 case 8:
                     System.out.println("Attack!");
-                    hitbox.x = (int)(gp.player.worldX - 48*gp.player.size); //48 because rn base size is 48
-                    hitbox.width = (int)(48*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
-                    hitbox.y = (gp.player.worldY);
-                    hitbox.height = gp.tileSize;
+                    hitbox[0].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[0].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[0].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[0].y = (gp.player.worldY + gp.tileSize - hitbox[0].height);
 
-                    hitbox2.x = (int)(gp.player.worldX - 48*gp.player.size);
-                    hitbox2.width = (int)(48*gp.player.size*2 + gp.tileSize);
-                    hitbox2.y = (gp.player.worldY) - hitbox.height;
-                    hitbox2.height = gp.tileSize;
-        
-                    gp.cChecker.checkWeaponHit(this, gp.enemies);
-                    gp.entityList.add(this);
-                    attackCounter = 0;
+                    hitbox[1].x = (int)(gp.player.worldX - baseSize*gp.player.size); //48 because rn base size is 48
+                    hitbox[1].width = (int)(baseSize*gp.player.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+                    hitbox[1].height = (int)(gp.tileSize * gp.player.size);
+                    hitbox[1].y = (hitbox[0].y - hitbox[1].height);
                     break;
+                
             }
-            
+            gp.cChecker.checkWeaponHit(this, gp.enemies);
+            baseAttackFrame = attackCounter;
+        }
+        if (weaponHitCounter >= 10) weaponHitCounter = 0;
+        if (baseAttackFrame != 0 && attackCounter >= baseAttackFrame + 15){
+            attacking = false;
+            attackCounter = 0;
+            baseAttackFrame = 0;
         }
     }
 
@@ -179,24 +172,36 @@ public class Sword extends Entity{
         }
     }
 
+    public void scaleImages(){
+        leftSlash = utool.scaleImage(leftSlash, (int)(48*gp.player.size), (int)(gp.tileSize * gp.player.size));
+        rightSlash = utool.scaleImage(rightSlash, (int)(48*gp.player.size), (int)(gp.tileSize * gp.player.size));
+    }
+
     public void draw(Graphics2D g2){
         System.out.println("weapon drawn");
+        if(attacking == true){
 
-        int screenX = (int)(gp.player.screenX - 48*gp.player.size);
-        int screenY = (int)(gp.player.screenY);
+            int screenX = (int)(gp.player.screenX - baseSize*gp.player.size);
+            int screenY = gp.player.screenY + gp.tileSize - hitbox[0].height;
 
-        g2.drawImage(leftSlash, screenX, screenY, null);
-        screenX += 48*gp.player.size + gp.tileSize;
-        g2.drawImage(rightSlash, screenX, screenY, null);
-
-        if (level >= 4){
-            screenX -= 48*gp.player.size + gp.tileSize;
-            screenY -= hitbox.height;
+            System.out.println("weapon x and y = " + screenX + " " + screenY);
+            System.out.println("player x and y = " + gp.player.screenX + " " + gp.player.screenY);
 
             g2.drawImage(leftSlash, screenX, screenY, null);
             screenX += 48*gp.player.size + gp.tileSize;
             g2.drawImage(rightSlash, screenX, screenY, null);
+
+            if (level >= 4){
+                screenX -= 48*gp.player.size + gp.tileSize;
+                screenY -= hitbox[1].height;
+
+                g2.drawImage(leftSlash, screenX, screenY, null);
+                screenX += 48*gp.player.size + gp.tileSize;
+                g2.drawImage(rightSlash, screenX, screenY, null);
+            }
+
         }
+        
     }
 
 }

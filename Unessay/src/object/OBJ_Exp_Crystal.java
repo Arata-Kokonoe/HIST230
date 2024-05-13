@@ -1,6 +1,7 @@
 package object;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import entity.Entity;
@@ -18,10 +19,13 @@ public class OBJ_Exp_Crystal extends Entity{
         name = "Exp Crystal";
         right0 = setup("/objects/expCrystal", 12, 12);
 
-        hitbox.x = 18;
-        hitbox.width = 12;
-        hitbox.y = 36;
-        hitbox.height = 12;
+        hitbox = new Rectangle[1];
+
+        hitbox[0] = new Rectangle();
+        hitbox[0].x = 18;
+        hitbox[0].width = 12;
+        hitbox[0].y = 36;
+        hitbox[0].height = 12;
 
         type = 3;
 

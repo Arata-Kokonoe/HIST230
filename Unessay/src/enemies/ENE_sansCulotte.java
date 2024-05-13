@@ -1,5 +1,6 @@
 package enemies;
 
+import java.awt.Rectangle;
 import java.util.Random;
 
 import entity.Entity;
@@ -13,6 +14,7 @@ public class ENE_sansCulotte extends Entity{
         super(gp);
 
         this.gp = gp;
+        hitbox = new Rectangle[1];
 
         type = 2;
         name = "Sans-culotte";
@@ -25,12 +27,9 @@ public class ENE_sansCulotte extends Entity{
         damageMultiplier = 1;
         damageReduction = 0;
 
-        hitbox.x = 12;
-        hitbox.y = 12;
-        hitbox.width = 24;
-        hitbox.height = 36;
-        hitboxDefaultX = hitbox.x;
-        hitboxDefaultY = hitbox.y;
+        hitbox[0] = new Rectangle(12, 12, 24, 36);
+        hitboxDefaultX = hitbox[0].x;
+        hitboxDefaultY = hitbox[0].y;
 
         getImage();
     }

@@ -2,10 +2,13 @@ package entity;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -19,12 +22,15 @@ public class Entity {
     public BufferedImage attackLeft1, attackLeft2, attackRight1, attackRight2;
     public BufferedImage icon;
     public BufferedImage image;
-    public Rectangle hitbox = new Rectangle(0, 0, 48, 48);
+    public Rectangle[] hitbox = new Rectangle[1];
     public RoundRectangle2D.Double roundHitbox;
-    public Rectangle attackArea = new Rectangle(0, 0, 0, 0);
     public int hitboxDefaultX, hitboxDefaultY;
     public boolean collision = false;
     String dialogues[] = new String[20];
+    public ArrayList<Entity> hitby = new ArrayList<Entity>();
+    public ArrayList<Entity> enemiesHit = new ArrayList<Entity>();
+    public ArrayList<Integer> enemiesHitTimer = new ArrayList<Integer>();
+    public int xOffset, yOffset;
     
     //STATE
     public int worldX;
@@ -33,8 +39,10 @@ public class Entity {
     public String leftOrRight = "right";
     public int spriteNum = 1;
     public int dialogueIndex = 0;
+    public int lastDamageTaken;
     public boolean collisionOn = false;
     public boolean invincible = false;
+    public boolean hit = false;
     public boolean attacking = false;
     public boolean alive = true;
     public boolean dying = false;
@@ -44,6 +52,8 @@ public class Entity {
     public int spriteCounter = 0;
     public int actionLockCounter = 0;
     public int invincibleCounter = 0;
+    public int hitCounter = 0;
+    public int weaponHitCounter = 0;
     public int offscreenCounter = 0;
     int dyingCounter = 0;
     
@@ -72,6 +82,10 @@ public class Entity {
 
     public Entity (GamePanel gp){
         this.gp = gp;
+
+        Random rand = new Random();
+        xOffset = rand.nextInt(gp.tileSize+1);
+        yOffset = rand.nextInt(gp.tileSize+1);
     }
 
     public void setAction(){}
@@ -102,7 +116,7 @@ public class Entity {
         setAction();
 
         collisionOn = false;
-        gp.cChecker.checkTile(this);
+        //gp.cChecker.checkTile(this);
         gp.cChecker.checkObject(this, false);
         gp.cChecker.checkEntity(this, gp.npc);
         gp.cChecker.checkEntity(this, gp.enemies);
@@ -176,6 +190,14 @@ public class Entity {
             }
         }
 
+        if(hit == true){
+            hitCounter++;
+            if(hitCounter > 20){
+                hit = false;
+                hitCounter = 0;
+            }
+        }
+
 
     }
     
@@ -205,7 +227,7 @@ public class Entity {
                     break;
             } //end of switch
 
-            if (invincible == true && dying != true){
+            /*if (invincible == true && dying != true){
                 //first, generate mask
                 int imgWidth = image.getWidth();
                 int imgHeight = image.getHeight();
@@ -234,9 +256,8 @@ public class Entity {
                 //code to tint an image taken from https://stackoverflow.com/questions/14225518/tinting-image-in-java-improvement?noredirect=1&lq=1
                 
                 //later, add code for blood particles
-            } 
-            
-            else if (dying == true){
+            } */
+            if (dying == true){
                 dyingAnimation(g2);
                 g2.drawImage(image, screenX, screenY, null);
             }
@@ -247,6 +268,20 @@ public class Entity {
                 //DEBUG
                 g2.setColor(Color.red);
                 g2.drawRect(screenX + 12, screenY + 12, 29, 41);
+            }
+            if (hit == true){
+
+                /*Random rand = new Random();
+                int xOffset = rand.nextInt(gp.tileSize+1);
+                int yOffset = rand.nextInt(gp.tileSize+1);*/
+
+                //changeAlpha(g2, 1f);
+                g2.setColor(Color.black);
+                g2.setFont(g2.getFont().deriveFont(Font.ITALIC, 24f));
+                g2.drawString("" + lastDamageTaken, screenX + xOffset+5, screenY + yOffset+5);
+                g2.setColor(Color.white);
+                g2.drawString("" + lastDamageTaken, screenX + xOffset, screenY + yOffset);
+
             }
         }
     }
@@ -335,18 +370,24 @@ public class Entity {
     }
 
     public void addEffect(){
-        System.out.println("this entity has no effect, overwrite method" + "\nEntity name: " + this.name);
+        System.out.println("this entity (" + this.name + ") has no addEffect method, overwrite method");
     }
     public void attack(){
-        System.out.println("this entity has no attack, overwrite method" + "\nEntity name: " + this.name);
+        System.out.println("this entity (" + this.name + ") has no attack method, overwrite method");
     }
 
     public void checkLevelUp(){
-        System.out.println("this entity shouldn't level up, overwrite method" + "\nEntity name: " + this.name);
+        System.out.println("this entity (" + this.name + ") has no checkLevelUp method, overwrite method");
+    }
+
+    public void scaleImages(){
+        System.out.println("this entity (" + this.name + ") has no scaleImages method, overwrite method");
     }
 
     public boolean equals(Entity other){
         if (name.contentEquals(other.name)) return true;
         else return false;
     }
+
+
 }

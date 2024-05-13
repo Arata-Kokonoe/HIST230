@@ -194,11 +194,6 @@ public class KeyHandler implements KeyListener{
                 if(upgraded == false){
                     int i = utool.checkEntityArr(gp.player.currentWeapons);
                     gp.player.currentWeapons[i] = gp.player.upgradeChoices[gp.ui.upgradeNum];
-                    if(gp.player.currentWeapons[i].name.contentEquals("Executioner's Badge")){
-                        System.out.println("badge obtained");   
-                        gp.player.badgeIndex = i;
-                        gp.player.hasBadge = true;
-                    }
                 }
             }
             gp.gameState = gp.playState;

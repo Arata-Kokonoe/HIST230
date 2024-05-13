@@ -1,5 +1,7 @@
 package main;
 
+import java.awt.Rectangle;
+
 import entity.Entity;
 
 public class CollisionChecker {
@@ -10,12 +12,12 @@ public class CollisionChecker {
         this.gp = gp;
     }
 
-    public void checkTile(Entity entity){
-        
-        int entityLeftWorldX = entity.worldX + entity.hitbox.x; //find left x of hitbox
-        int entityRightWorldX = entity.worldX + entity.hitbox.x + entity.hitbox.width;  //find right x of hitbox
-        int entityTopWorldY = entity.worldY + entity.hitbox.y;  //find top y of hitbox
-        int entityBotWorldY = entity.worldY + entity.hitbox.y + entity.hitbox.height;   //find bottom y of hitbox
+    /*public void checkTile(Entity entity){
+    
+        int entityLeftWorldX = entity.worldX + entity.hitbox[0].x; //find left x of hitbox
+        int entityRightWorldX = entity.worldX + entity.hitbox[0].x + entity.hitbox[0].width;  //find right x of hitbox
+        int entityTopWorldY = entity.worldY + entity.hitbox[0].y;  //find top y of hitbox
+        int entityBotWorldY = entity.worldY + entity.hitbox[0].y + entity.hitbox[0].height;   //find bottom y of hitbox
 
         int entityLeftCol = entityLeftWorldX/gp.tileSize;   //find which column the left x is in
         int entityRightCol = entityRightWorldX/gp.tileSize; //find which column the right x is in
@@ -107,7 +109,7 @@ public class CollisionChecker {
             }
             break;
         }
-    }
+    }*/
 
     /*public void checkAura(Entity entity, Entity[] enemies){
 
@@ -186,44 +188,46 @@ public class CollisionChecker {
             if(gp.obj[i] != null){
 
                 // Get entity's hitbox position
-                entity.hitbox.x = entity.worldX + entity.hitbox.x;
-                entity.hitbox.y = entity.worldY + entity.hitbox.y;
+                entity.hitbox[0].x = entity.worldX + entity.hitbox[0].x;
+                entity.hitbox[0].y = entity.worldY + entity.hitbox[0].y;
                 //Get the object's hitbox position
-                gp.obj[i].hitbox.x = gp.obj[i].worldX + gp.obj[i].hitbox.x;
-                gp.obj[i].hitbox.y = gp.obj[i].worldY + gp.obj[i].hitbox.y;
+                gp.obj[i].hitbox[0].x = gp.obj[i].worldX + gp.obj[i].hitbox[0].x;
+                gp.obj[i].hitbox[0].y = gp.obj[i].worldY + gp.obj[i].hitbox[0].y;
 
                 switch(entity.direction){ //change hitbox position based on direction entity is moving
                 case "up":
-                    entity.hitbox.y -= entity.speed;
+                    entity.hitbox[0].y -= entity.speed;
                     break;
                 case "down":
-                    entity.hitbox.y += entity.speed;
+                    entity.hitbox[0].y += entity.speed;
                     break;
                 case "left":
-                    entity.hitbox.x -= entity.speed;
+                    entity.hitbox[0].x -= entity.speed;
                     break;
                 case "right":
-                    entity.hitbox.x += entity.speed;
+                    entity.hitbox[0].x += entity.speed;
                     break;
                 case "upleft":
-                    entity.hitbox.x -= entity.speed;
-                    entity.hitbox.y -= entity.speed;
+                    entity.hitbox[0].x -= entity.speed;
+                    entity.hitbox[0].y -= entity.speed;
                     break;
                 case "downleft":
-                    entity.hitbox.x -= entity.speed;
-                    entity.hitbox.y += entity.speed;
+                    entity.hitbox[0].x -= entity.speed;
+                    entity.hitbox[0].y += entity.speed;
                     break;
                 case "upright":
-                    entity.hitbox.x += entity.speed;
-                    entity.hitbox.y -= entity.speed;
+                    entity.hitbox[0].x += entity.speed;
+                    entity.hitbox[0].y -= entity.speed;
                     break;
                 case "downright":
-                    entity.hitbox.x += entity.speed;
-                    entity.hitbox.y += entity.speed;
+                    entity.hitbox[0].x += entity.speed;
+                    entity.hitbox[0].y += entity.speed;
+                    break;
+                default:
                     break;
                 }
 
-                if(entity.hitbox.intersects(gp.obj[i].hitbox)){ //if the newly moved hitbox intersects an object's hitbox
+                if(entity.hitbox[0].intersects(gp.obj[i].hitbox[0])){ //if the newly moved hitbox intersects an object's hitbox
                     if(gp.obj[i].collision == true){
                         entity.collisionOn = true;  //turn collisionOn boolean to true
                     }
@@ -233,10 +237,10 @@ public class CollisionChecker {
                     }
                 }
                 //reset the hitbox positions we changed in the method
-                entity.hitbox.x = entity.hitboxDefaultX;
-                entity.hitbox.y = entity.hitboxDefaultY;
-                gp.obj[i].hitbox.x = gp.obj[i].hitboxDefaultX;
-                gp.obj[i].hitbox.y = gp.obj[i].hitboxDefaultY;
+                entity.hitbox[0].x = entity.hitboxDefaultX;
+                entity.hitbox[0].y = entity.hitboxDefaultY;
+                gp.obj[i].hitbox[0].x = gp.obj[i].hitboxDefaultX;
+                gp.obj[i].hitbox[0].y = gp.obj[i].hitboxDefaultY;
             }
         }
         return index;
@@ -252,43 +256,43 @@ public class CollisionChecker {
             if(target[i] != null && target[i].dying != true){
 
                 // Get entity's hitbox position
-                entity.hitbox.x = entity.worldX + entity.hitbox.x;
-                entity.hitbox.y = entity.worldY + entity.hitbox.y;
+                entity.hitbox[0].x = entity.worldX + entity.hitbox[0].x;
+                entity.hitbox[0].y = entity.worldY + entity.hitbox[0].y;
                 //Get the object's hitbox position
-                target[i].hitbox.x = target[i].worldX + target[i].hitbox.x;
-                target[i].hitbox.y = target[i].worldY + target[i].hitbox.y;
+                target[i].hitbox[0].x = target[i].worldX + target[i].hitbox[0].x;
+                target[i].hitbox[0].y = target[i].worldY + target[i].hitbox[0].y;
 
                 switch(entity.direction){
                 case "up":
-                    entity.hitbox.y -= entity.speed;
+                    entity.hitbox[0].y -= entity.speed;
                     break;
                 case "down":
-                    entity.hitbox.y += entity.speed;
+                    entity.hitbox[0].y += entity.speed;
                     break;
                 case "left":
-                    entity.hitbox.x -= entity.speed;
+                    entity.hitbox[0].x -= entity.speed;
                     break;
                 case "right":
-                    entity.hitbox.x += entity.speed;
+                    entity.hitbox[0].x += entity.speed;
                     break;
                 case "upleft":
-                    entity.hitbox.x -= entity.speed;
-                    entity.hitbox.y -= entity.speed;
+                    entity.hitbox[0].x -= entity.speed;
+                    entity.hitbox[0].y -= entity.speed;
                     break;
                 case "downleft":
-                    entity.hitbox.x -= entity.speed;
-                    entity.hitbox.y += entity.speed;
+                    entity.hitbox[0].x -= entity.speed;
+                    entity.hitbox[0].y += entity.speed;
                     break;
                 case "upright":
-                    entity.hitbox.x += entity.speed;
-                    entity.hitbox.y -= entity.speed;
+                    entity.hitbox[0].x += entity.speed;
+                    entity.hitbox[0].y -= entity.speed;
                     break;
                 case "downright":
-                    entity.hitbox.x += entity.speed;
-                    entity.hitbox.y += entity.speed;
+                    entity.hitbox[0].x += entity.speed;
+                    entity.hitbox[0].y += entity.speed;
                     break;
                 }
-                if(entity.hitbox.intersects(target[i].hitbox)){
+                if(entity.hitbox[0].intersects(target[i].hitbox[0])){
                     if(target[i] != entity){
                         entity.collisionOn = true;
                         index = i;
@@ -296,10 +300,10 @@ public class CollisionChecker {
                 }
                     
 
-                entity.hitbox.x = entity.hitboxDefaultX;
-                entity.hitbox.y = entity.hitboxDefaultY;
-                target[i].hitbox.x = target[i].hitboxDefaultX;
-                target[i].hitbox.y = target[i].hitboxDefaultY;
+                entity.hitbox[0].x = entity.hitboxDefaultX;
+                entity.hitbox[0].y = entity.hitboxDefaultY;
+                target[i].hitbox[0].x = target[i].hitboxDefaultX;
+                target[i].hitbox[0].y = target[i].hitboxDefaultY;
             }
         }
         return index;
@@ -311,84 +315,93 @@ public class CollisionChecker {
         boolean contactPlayer = false;
 
         // Get entity's hitbox position
-        entity.hitbox.x = entity.worldX + entity.hitbox.x;
-        entity.hitbox.y = entity.worldY + entity.hitbox.y;
+        entity.hitbox[0].x = entity.worldX + entity.hitbox[0].x;
+        entity.hitbox[0].y = entity.worldY + entity.hitbox[0].y;
         //Get the object's hitbox position
-        gp.player.hitbox.x = gp.player.worldX + gp.player.hitbox.x;
-        gp.player.hitbox.y = gp.player.worldY + gp.player.hitbox.y;
+        gp.player.hitbox[0].x = gp.player.worldX + gp.player.hitbox[0].x;
+        gp.player.hitbox[0].y = gp.player.worldY + gp.player.hitbox[0].y;
 
         switch(entity.direction){
         case "up":
-            entity.hitbox.y -= entity.speed;
+            entity.hitbox[0].y -= entity.speed;
             break;
         case "down":
-            entity.hitbox.y += entity.speed;
+            entity.hitbox[0].y += entity.speed;
             break;
         case "left":
-            entity.hitbox.x -= entity.speed;
+            entity.hitbox[0].x -= entity.speed;
             break;
         case "right":
-            entity.hitbox.x += entity.speed;
+            entity.hitbox[0].x += entity.speed;
             break;
         case "upleft":
-            entity.hitbox.x -= entity.speed;
-            entity.hitbox.y -= entity.speed;
+            entity.hitbox[0].x -= entity.speed;
+            entity.hitbox[0].y -= entity.speed;
             break;
         case "downleft":
-            entity.hitbox.x -= entity.speed;
-            entity.hitbox.y += entity.speed;
+            entity.hitbox[0].x -= entity.speed;
+            entity.hitbox[0].y += entity.speed;
             break;
         case "upright":
-            entity.hitbox.x += entity.speed;
-            entity.hitbox.y -= entity.speed;
+            entity.hitbox[0].x += entity.speed;
+            entity.hitbox[0].y -= entity.speed;
             break;
         case "downright":
-            entity.hitbox.x += entity.speed;
-            entity.hitbox.y += entity.speed;
+            entity.hitbox[0].x += entity.speed;
+            entity.hitbox[0].y += entity.speed;
             break;
         }
-        if(entity.hitbox.intersects(gp.player.hitbox)){
+        if(entity.hitbox[0].intersects(gp.player.hitbox[0])){
             entity.collisionOn = true;
             contactPlayer = true;
         }
-        entity.hitbox.x = entity.hitboxDefaultX;
-        entity.hitbox.y = entity.hitboxDefaultY;
-        gp.player.hitbox.x = gp.player.hitboxDefaultX;
-        gp.player.hitbox.y = gp.player.hitboxDefaultY;
+        entity.hitbox[0].x = entity.hitboxDefaultX;
+        entity.hitbox[0].y = entity.hitboxDefaultY;
+        gp.player.hitbox[0].x = gp.player.hitboxDefaultX;
+        gp.player.hitbox[0].y = gp.player.hitboxDefaultY;
 
         return contactPlayer;
     } 
 
     public void checkWeaponHit(Entity weapon, Entity[] enemies){
 
-        weapon.hitbox.x = (int)(gp.player.worldX - 48*weapon.size); //48 because rn base size is 48
-        weapon.hitbox.width = (int)(48*weapon.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
-        weapon.hitbox.y = (gp.player.worldY);
-        weapon.hitbox.height = gp.tileSize;
+        for(Rectangle hitbox : weapon.hitbox){
+            hitbox.x = (int)(gp.player.worldX - 48*weapon.size); //48 because rn base size is 48
+            hitbox.width = (int)(48*weapon.size*2 + gp.tileSize);  //width = 2 slashes + size of player which is gp.tilesize
+            hitbox.y = (gp.player.worldY);
+            hitbox.height = gp.tileSize;
 
-        for(int i = 0; i < enemies.length; i++){
-            if(enemies[i] != null){
-                enemies[i].hitbox.x = enemies[i].worldX + enemies[i].hitbox.x;
-                enemies[i].hitbox.y = enemies[i].worldY + enemies[i].hitbox.y;
-                if(weapon.hitbox.intersects(enemies[i].hitbox)){
-                    //gp.playSE(5);
-                    if(enemies[i].invincible == false){
-                        double damage = weapon.damage * gp.player.damageMultiplier * (1-enemies[i].damageReduction);
-                        if(damage < 0) damage = 0;
-                        enemies[i].life -= damage;
-                        gp.ui.addMessage(damage + " damage!");
+            for(int i = 0; i < enemies.length; i++){
+                if(enemies[i] != null){
+                    if(weapon.enemiesHit.indexOf(enemies[i]) == -1){
+                        enemies[i].hitbox[0].x = enemies[i].worldX + enemies[i].hitbox[0].x;
+                        enemies[i].hitbox[0].y = enemies[i].worldY + enemies[i].hitbox[0].y;
+                        if(hitbox.intersects(enemies[i].hitbox[0])){
+                            //gp.playSE(5);i
+                            
+                            double damage = weapon.damage * gp.player.damageMultiplier * (1-enemies[i].damageReduction);
+                            if(damage < 0) damage = 0;
+                            enemies[i].life -= damage;
+                            gp.ui.addMessage(damage + " damage!");
 
-                        if(gp.enemies[i].life <= 0){
-                            gp.enemies[i].dying = true;
-                            gp.ui.addMessage("killed the " + gp.enemies[i].name + "!");
-                            gp.eSpawner.spawnExp(gp.enemies[i].worldX, gp.enemies[i].worldY);
+                            enemies[i].hit = true;
+                            enemies[i].lastDamageTaken = (int)damage;
+                            weapon.enemiesHit.add(enemies[i]);
+                            weapon.enemiesHitTimer.add(0);
+
+                            if(gp.enemies[i].life <= 0){
+                                gp.enemies[i].dying = true;
+                                gp.ui.addMessage("killed the " + gp.enemies[i].name + "!");
+                                gp.eSpawner.spawnExp(gp.enemies[i].worldX, gp.enemies[i].worldY);
+                            }
                         }
+                        enemies[i].hitbox[0].x = enemies[i].hitboxDefaultX;
+                        enemies[i].hitbox[0].y = enemies[i].hitboxDefaultY;   
                     }
                 }
-                enemies[i].hitbox.x = enemies[i].hitboxDefaultX;
-                enemies[i].hitbox.y = enemies[i].hitboxDefaultY;
             }
         }
+        
     }
 
     public void checkRoundWeaponHit(Entity weapon, Entity[] enemies){
@@ -400,16 +413,20 @@ public class CollisionChecker {
 
         for(int i = 0; i < enemies.length; i++){ // i love you <3
             if(enemies[i] != null){
-                enemies[i].hitbox.x = enemies[i].worldX + enemies[i].hitbox.x;
-                enemies[i].hitbox.y = enemies[i].worldY + enemies[i].hitbox.y;
-                if(weapon.roundHitbox.intersects(enemies[i].hitbox)){
-                    //gp.playSE(5);
-                    if(enemies[i].invincible == false){
+                if(weapon.enemiesHit.indexOf(enemies[i]) == -1){
+                    enemies[i].hitbox[0].x = enemies[i].worldX + enemies[i].hitbox[0].x;
+                    enemies[i].hitbox[0].y = enemies[i].worldY + enemies[i].hitbox[0].y;
+                    if(weapon.roundHitbox.intersects(enemies[i].hitbox[0])){
+                        //gp.playSE(5);
                         double damage = weapon.damage * gp.player.damageMultiplier * (1-enemies[i].damageReduction);
                         if(damage < 0) damage = 0;
                         enemies[i].life -= damage;
                         gp.ui.addMessage(damage + " damage!");
-                        
+
+                        enemies[i].hit = true;
+                        enemies[i].lastDamageTaken = (int)damage;
+                        weapon.enemiesHit.add(enemies[i]);
+                        weapon.enemiesHitTimer.add(0);
 
                         if(gp.enemies[i].life <= 0){
                             gp.enemies[i].dying = true;
@@ -417,9 +434,9 @@ public class CollisionChecker {
                             gp.eSpawner.spawnExp(gp.enemies[i].worldX, gp.enemies[i].worldY);
                         }
                     }
+                    enemies[i].hitbox[0].x = enemies[i].hitboxDefaultX;
+                    enemies[i].hitbox[0].y = enemies[i].hitboxDefaultY;
                 }
-                enemies[i].hitbox.x = enemies[i].hitboxDefaultX;
-                enemies[i].hitbox.y = enemies[i].hitboxDefaultY;
             }
         }
     }

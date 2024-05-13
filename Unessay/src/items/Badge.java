@@ -38,7 +38,15 @@ public class Badge extends Entity{
 
     public void attack(){
         attackCounter++;
-        //System.out.println("attackCounter = " + attackCounter);
+        weaponHitCounter++;
+        for(int i = 0; i < enemiesHit.size(); i++){
+            enemiesHitTimer.set(i, enemiesHitTimer.get(i) + 1);
+            if(enemiesHitTimer.get(i) >= 14){
+                enemiesHit.remove(i);
+                enemiesHitTimer.remove(i);
+                if(i >= enemiesHit.size()) break;
+            }
+        }
 
         if(attackCounter == 15){
             System.out.println("Attack!");
@@ -50,16 +58,18 @@ public class Badge extends Entity{
             gp.cChecker.checkRoundWeaponHit(this, gp.enemies);
             attackCounter = 0;
         }
+
+        if (weaponHitCounter >= 10) weaponHitCounter = 0;
+
     }
 
     public void draw(Graphics2D g2){
-        System.out.println("weapon drawn");
-
-        int screenX = (int)(gp.player.screenX - 48*gp.player.size);
-        int screenY = (int)(gp.player.screenY - 48*gp.player.size);
+        System.out.println("drawing badge");
+        int screenX = (int)(gp.player.screenX - 48*size);
+        int screenY = (int)(gp.player.screenY - 48*size);
 
         g2.setColor(new Color(0, 0, 0, 125));
-        g2.fillOval(screenX, screenY, (int)roundHitbox.width, (int)roundHitbox.height);
+        g2.fillOval(screenX, screenY, (int)(48*size*3), (int)(48*size*3));
     }
 
 }

@@ -11,6 +11,8 @@ import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.w3c.dom.css.Rect;
+
 import items.Badge;
 import items.Sword;
 import main.GamePanel;
@@ -20,6 +22,7 @@ import main.KeyHandler;
 public class Player extends Entity{
 
     KeyHandler keyH;
+    Graphics2D g2;
 
     public final int screenX;
     public final int screenY;
@@ -31,29 +34,24 @@ public class Player extends Entity{
     public Entity[] currentWeapons;
     public Entity[] currentPassives;
 
-    public boolean hasBadge = false;
-    public int badgeIndex;
-
     //public int hasKey = 0;
 
     public Player(GamePanel gp, KeyHandler keyH){
 
         super(gp);
         this.keyH = keyH;
+        hitbox = new Rectangle[1];
 
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
 
-        hitbox = new Rectangle();
-        hitbox.x = 12;
-        hitbox.y = 16;
-        hitboxDefaultX = hitbox.x;
-        hitboxDefaultY = hitbox.y;
-        hitbox.width = 24;
-        hitbox.height = 32;
-
-        attackArea.width = 48;
-        attackArea.height = 36;
+        hitbox[0] = new Rectangle();
+        hitbox[0].x = 12;
+        hitbox[0].y = 16;
+        hitboxDefaultX = hitbox[0].x;
+        hitboxDefaultY = hitbox[0].y;
+        hitbox[0].width = 24;
+        hitbox[0].height = 32;
 
         setDefaultValues();
         getPlayerImage();
@@ -89,6 +87,7 @@ public class Player extends Entity{
         nextLevelExp = 1;
         coin = 0;
         currentWeapons[0] = new Sword(gp);
+        currentWeapons[0].level = 5;
     }
 
     public void setUpgrades(){
@@ -165,9 +164,6 @@ public class Player extends Entity{
     public void update(){
 
         useWeapons();
-        /*if(attacking == true){
-            attacking();
-        }*/
 
         if(keyH.upPressed == true || keyH.downPressed == true
                 || keyH.leftPressed == true || keyH.rightPressed == true || keyH.interactPressed == true){
@@ -205,7 +201,7 @@ public class Player extends Entity{
 
             //CHECK TILE COLLISION
             collisionOn = false;
-            gp.cChecker.checkTile(this);
+            //gp.cChecker.checkTile(this);
 
             // CHECK OBJECT COLLISION
             int objIndex = gp.cChecker.checkObject(this, true);
@@ -527,41 +523,32 @@ public class Player extends Entity{
             }
         }
     }
+
+    public void drawWeapons(Graphics2D g2){
+        for(int i = 0; i < currentWeapons.length; i++){
+            if(currentWeapons[i] != null){
+                currentWeapons[i].draw(g2);
+            }
+        }
+    }
     //i love you
 
     public void draw(Graphics2D g2){
 
         BufferedImage image = null;
-        int tempScreenX = screenX;
-        int tempScreenY = screenY;
 
         switch(leftOrRight){
             case "left":
-                if(attacking == false){
-                    if (spriteNum == 1) image = left0;
-                    else if (spriteNum == 2) image = left1;
-                    else if (spriteNum == 3) image = left2;
-                    else if (spriteNum == 4) image = left3;
-                }
-                if(attacking == true){
-                    tempScreenX = screenX - gp.tileSize;
-                    if (spriteNum == 1) image = attackLeft1;
-                    else if (spriteNum == 2) image = attackLeft2;
-                    else image = attackLeft2;
-                }
+                if (spriteNum == 1) image = left0;
+                else if (spriteNum == 2) image = left1;
+                else if (spriteNum == 3) image = left2;
+                else if (spriteNum == 4) image = left3;
                 break;
             case "right":
-                if(attacking == false){
-                    if (spriteNum == 1) image = right0;
-                    else if (spriteNum == 2) image = right1;
-                    else if (spriteNum == 3) image = right2;
-                    else if (spriteNum == 4) image = right3;
-                }
-                if(attacking == true){
-                    if (spriteNum == 1) image = attackRight1;
-                    else if (spriteNum == 2) image = attackRight2;
-                    else image = attackRight2;
-                }
+                if (spriteNum == 1) image = right0;
+                else if (spriteNum == 2) image = right1;
+                else if (spriteNum == 3) image = right2;
+                else if (spriteNum == 4) image = right3;
                 break;
         } //end of switch
 
@@ -592,24 +579,18 @@ public class Player extends Entity{
 
 
             //finally, draw the tinted image
-            g2.drawImage(tinted, tempScreenX, tempScreenY, null);
+            g2.drawImage(tinted, screenX, screenY, null);
+            drawWeapons(g2);
             //code to tint an image taken from https://stackoverflow.com/questions/14225518/tinting-image-in-java-improvement?noredirect=1&lq=1
             
             //later, add code for blood particles
         }
         else{
             changeAlpha(g2, 1f);
-            g2.drawImage(image, tempScreenX, tempScreenY, null); //draw player
+            g2.drawImage(image, screenX, screenY, null); //draw player
+            drawWeapons(g2);
         }
 
-        if(hasBadge == true){
-            System.out.println("drawing badge");
-            int screenX = (int)(tempScreenX - 48*size);
-            int screenY = (int)(tempScreenY - 48*size);
-
-            g2.setColor(new Color(0, 0, 0, 125));
-            g2.fillOval(screenX, screenY, (int)(48*size*3), (int)(48*size*3));
-        }
         //reset alpha
         //g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     } //end of draw method

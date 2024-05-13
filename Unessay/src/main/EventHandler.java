@@ -53,12 +53,12 @@ public class EventHandler {
     public boolean hit(int col, int row, String reqDirection){
         boolean hit = false;
 
-        gp.player.hitbox.x = gp.player.worldX + gp.player.hitbox.x;
-        gp.player.hitbox.y = gp.player.worldY + gp.player.hitbox.y;
+        gp.player.hitbox[0].x = gp.player.worldX + gp.player.hitbox[0].x;
+        gp.player.hitbox[0].y = gp.player.worldY + gp.player.hitbox[0].y;
         eventHitbox[col][row].x = col*gp.tileSize + eventHitbox[col][row].x;
         eventHitbox[col][row].y = row*gp.tileSize + eventHitbox[col][row].y;
 
-        if(gp.player.hitbox.intersects(eventHitbox[col][row]) && eventHitbox[col][row].eventDone == false){
+        if(gp.player.hitbox[0].intersects(eventHitbox[col][row]) && eventHitbox[col][row].eventDone == false){
             if(gp.player.direction.contentEquals(reqDirection) || reqDirection.contentEquals("any")){
                 hit = true;
 
@@ -67,8 +67,8 @@ public class EventHandler {
             }
         }
 
-        gp.player.hitbox.x = gp.player.hitboxDefaultX;
-        gp.player.hitbox.y = gp.player.hitboxDefaultY;
+        gp.player.hitbox[0].x = gp.player.hitboxDefaultX;
+        gp.player.hitbox[0].y = gp.player.hitboxDefaultY;
         eventHitbox[col][row].x = eventHitbox[col][row].eventHitboxDefaultX;
         eventHitbox[col][row].y = eventHitbox[col][row].eventHitboxDefaultY;
         

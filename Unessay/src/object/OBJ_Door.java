@@ -15,11 +15,11 @@ public class OBJ_Door extends Entity{
 
         //hitbox.x = 5 or something if we want to change hitbox of the key
         collision = true;
-        hitbox.x = 0;
-        hitbox.y = 16;
-        hitbox.width = 48;
-        hitbox.height = 32;
-        hitboxDefaultX = hitbox.x;
-        hitboxDefaultY = hitbox.y;
+        hitbox[0].x = 0;
+        hitbox[0].y = 16;
+        hitbox[0].width = 48;
+        hitbox[0].height = 32;
+        hitboxDefaultX = hitbox[0].x;
+        hitboxDefaultY = hitbox[0].y;
     }
 }

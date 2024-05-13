@@ -83,17 +83,20 @@ public class UI {
             utool.changeAlpha(g2, 1f);
             drawTimer();
             drawPlayerLife();
+            drawExpBar();
             drawMessage();
             utool.changeAlpha(g2, 0f);
         }
         //PAUSE STATE
         if(gp.gameState == gp.pauseState){
             drawPlayerLife();
+            drawExpBar();
             drawPauseScreen();
         }
         //DIALOGUE STATE
         if(gp.gameState == gp.dialogueState){
             drawPlayerLife();
+            drawExpBar();
             drawDialogueScreen();
         }
         //CHARACTER STATE
@@ -102,8 +105,25 @@ public class UI {
         }
         //LEVELUP STATE
         if(gp.gameState == gp.levelupState){
+            drawExpBar();
             drawLevelupScreen();
         }
+    }
+
+    public void drawExpBar(){
+        int x = 0;
+        int y = 0;
+        int width = gp.screenWidth;
+        int height = gp.tileSize/2;
+
+        double oneScale = (double)width/gp.player.nextLevelExp;
+        double expBarValue = oneScale*gp.player.exp;
+
+        g2.setColor(new Color(28, 10, 17));
+        g2.fillRect(x, y, width, height);
+
+        g2.setColor(new Color(67, 23, 35));
+        g2.fillRect(x+1, y+1, (int)expBarValue, height-2);
     }
 
     public void drawPlayerLife(){
@@ -164,7 +184,7 @@ public class UI {
 
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, 36F));
         int x = getXForCenteredText(timer);
-        int y = gp.tileSize;
+        int y = gp.tileSize + gp.tileSize/4;
 
         g2.setColor(Color.white);
         g2.drawString(timer, x, y);

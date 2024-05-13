@@ -1,5 +1,6 @@
 package entity;
 
+import java.awt.Rectangle;
 import java.util.Random;
 
 import main.GamePanel;
@@ -12,6 +13,11 @@ public class NPC_OldMan extends Entity{
         direction = "right";
         leftOrRight = "right";
         speed = 1;
+        name = "NPC";
+        
+        hitbox[0] = new Rectangle(12, 12, 24, 36);
+        hitboxDefaultX = hitbox[0].x;
+        hitboxDefaultY = hitbox[0].y;
 
         getImage();
         setDialogue();
