@@ -3,7 +3,6 @@ package main;
 import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import entity.Entity;
 

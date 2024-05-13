@@ -1,8 +1,5 @@
 package object;
 
-import java.awt.image.BufferedImage;
-
-import entity.Item;
 import entity.Projectile;
 import main.GamePanel;
 import main.UtilityTool;

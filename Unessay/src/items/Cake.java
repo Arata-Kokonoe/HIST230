@@ -59,10 +59,10 @@ public class Cake extends Item{
             applied = false;
         }
         if(level == 4){
-            gp.player.availableUpgrades.remove(gp.player.availableUpgrades.indexOf(this));
+            gp.itemH.availableUpgrades.remove(gp.itemH.availableUpgrades.indexOf(this));
             //DEBUG
             System.out.println("cake reached level 4\n");
-            for (Entity e: gp.player.availableUpgrades) {
+            for (Entity e: gp.itemH.availableUpgrades) {
                 System.out.println("item: " + e.name);
             }
             System.out.println("\n");

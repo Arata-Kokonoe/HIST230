@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import entity.Entity;
 import entity.Item;
 import main.GamePanel;
-import main.ItemHandler;
 import main.UtilityTool;
 
 public class Sword extends Item{
@@ -122,10 +121,10 @@ public class Sword extends Item{
             applied = false;
         }
         if(level == 8){
-            gp.player.availableUpgrades.remove(gp.player.availableUpgrades.indexOf(this));
+            gp.itemH.availableUpgrades.remove(gp.itemH.availableUpgrades.indexOf(this));
             //DEBUG
             System.out.println("sword reached level 8\n");
-            for (Entity e: gp.player.availableUpgrades) {
+            for (Entity e: gp.itemH.availableUpgrades) {
                 System.out.println("item: " + e.name);
             }
             System.out.println("\n");

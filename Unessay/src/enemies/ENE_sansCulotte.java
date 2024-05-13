@@ -1,7 +1,6 @@
 package enemies;
 
 import java.awt.Rectangle;
-import java.util.Random;
 
 import entity.Entity;
 import main.GamePanel;
@@ -9,6 +8,7 @@ import main.GamePanel;
 public class ENE_sansCulotte extends Entity{
 
     GamePanel gp;
+    final int spaceBetween = 12;
 
     public ENE_sansCulotte(GamePanel gp){
         super(gp);
@@ -85,69 +85,62 @@ public class ENE_sansCulotte extends Entity{
             direction = "up";
         } 
 
+        for(int i = 0; i < gp.enemies.size(); i++){
+            int otherCenterX = (int)(gp.enemies.get(i).worldX + gp.tileSize/2);
+            int otherCenterY = (int)(gp.enemies.get(i).worldY + gp.tileSize/2);
+
+            int distanceToOther = (int)(Math.hypot(enemyCenterX-otherCenterX, enemyCenterY-otherCenterY));
+            //distance formula from https://stackoverflow.com/questions/14431032/i-want-to-calculate-the-distance-between-two-points-in-java
+            if(distanceToOther <= spaceBetween){
+                if(enemyCenterX > otherCenterX && enemyCenterY > otherCenterY) {
+                    direction = "downright";
+                    leftOrRight = "right";
+                }
+                else if (enemyCenterX < otherCenterX && enemyCenterY < otherCenterY){ 
+                    direction = "upleft";
+                    leftOrRight = "left";
+                }
+                else if (enemyCenterX > otherCenterX && enemyCenterY < otherCenterY){
+                    direction = "upright";
+                    leftOrRight = "right";
+                }
+                else if (enemyCenterX < otherCenterX && enemyCenterY > otherCenterY){
+                    direction = "downleft";
+                    leftOrRight = "left";
+                }
+                else if (enemyCenterX > otherCenterX){
+                    direction = "right";
+                    leftOrRight = "right";
+                }
+                else if (enemyCenterX < otherCenterX){
+                    direction = "left";
+                    leftOrRight = "left";
+                }
+                else if (enemyCenterY > otherCenterY){
+                    direction = "down";
+                }
+                else if (enemyCenterY < otherCenterY){
+                    direction = "up";
+                } 
+            }
+        }
     }
 
-    /*public void update(){
+    public void update(){
         setAction();
 
         collisionOn = false;
-        gp.cChecker.checkTile(this);
-        gp.cChecker.checkObject(this, false);
-        int enemyIndex = gp.cChecker.checkEntity(this, gp.npc);
-        gp.cChecker.checkEntity(this, gp.enemies);
+
         boolean contactPlayer = gp.cChecker.checkPlayer(this);
 
-        if(this.type == 2 && contactPlayer == true){
+        if(contactPlayer == true && alive == true && dying == false){
             if(gp.player.invincible == false){
-                gp.player.life -=5;
+                double incomingDamage = damage * (1-gp.player.damageReduction);
+                if(incomingDamage < 0) incomingDamage = 0;
+
+                gp.player.life -= incomingDamage;
                 gp.player.invincible = true;
             }
-        } //checks if enemy walks into player
-
-        /*if(enemyIndex != 999){
-            int otherCenterX = gp.enemies[enemyIndex].worldX + gp.tileSize/2;   
-            int otherCenterY = gp.enemies[enemyIndex].worldY + gp.tileSize/2;
-            int centerX = worldX + gp.tileSize/2;
-            int centerY = worldY + gp.tileSize/2;
-
-            switch(direction){
-                case "up": 
-                    gp.enemies[enemyIndex].worldY -= speed;
-                    if(otherCenterX > centerX) gp.enemies[enemyIndex].worldX += speed;
-                    else gp.enemies[enemyIndex].worldX -= speed;
-                    break;
-                case "down": 
-                    gp.enemies[enemyIndex].worldY += speed;
-                    if(otherCenterX > centerX) gp.enemies[enemyIndex].worldX += speed;
-                    else gp.enemies[enemyIndex].worldX -= speed;
-                    break;
-                case "left": 
-                    gp.enemies[enemyIndex].worldX -= speed;
-                    if(otherCenterY > centerY) gp.enemies[enemyIndex].worldY -= speed;
-                    else gp.enemies[enemyIndex].worldX += speed;
-                    break;
-                case "right": 
-                    gp.enemies[enemyIndex].worldX += speed;
-                    if(otherCenterY > centerY) gp.enemies[enemyIndex].worldY -= speed;
-                    else gp.enemies[enemyIndex].worldX += speed;
-                    break;
-                case "upleft": 
-                    worldY -= speed;
-                    worldX -= speed; 
-                    break;
-                case "upright": 
-                    worldY -= speed;
-                    worldX += speed; 
-                    break;
-                case "downleft": 
-                    worldY += speed;
-                    worldX -= speed; 
-                    break;
-                case "downright": 
-                    worldY += speed;
-                    worldX += speed; 
-                    break;
-                }
         }
 
         if(collisionOn == false){
@@ -173,6 +166,7 @@ public class ENE_sansCulotte extends Entity{
                 worldX += speed; 
                 break;
             }
+
         }
 
         spriteCounter++;
@@ -191,6 +185,14 @@ public class ENE_sansCulotte extends Entity{
             }
             spriteCounter = 0;
         }
-    }*/
 
+        if(hit == true){
+            hitCounter++;
+            if(hitCounter > 20){
+                hit = false;
+                hitCounter = 0;
+            }
+        }
+
+    }
 }

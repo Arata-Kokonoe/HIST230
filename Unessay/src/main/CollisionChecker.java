@@ -501,8 +501,8 @@ public class CollisionChecker {
                                 gp.eSpawner.spawnExp(enemies.get(j).worldX, enemies.get(j).worldY);
                             }
                         }
-                        enemies.get(i).hitbox[0].x = enemies.get(i).hitboxDefaultX;
-                        enemies.get(i).hitbox[0].y = enemies.get(i).hitboxDefaultY;   
+                        enemies.get(j).hitbox[0].x = enemies.get(j).hitboxDefaultX;
+                        enemies.get(j).hitbox[0].y = enemies.get(j).hitboxDefaultY;   
                     }
                 }
             }

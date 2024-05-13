@@ -1,8 +1,5 @@
 package main;
 
-import main.UtilityTool;
-
-import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -15,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import javax.swing.text.NumberFormatter;
 
 public class UI {
 
@@ -473,17 +469,17 @@ public class UI {
         //DRAW UPGRADE CHOIES
         g2.setColor(Color.white);
         
-        for (int i = 0; i < gp.player.upgradeChoices.length; i++){
-            if(gp.player.upgradeChoices[i] != null){
-                g2.drawImage(utool.scaleImage(gp.player.upgradeChoices[i].icon, iconSize, iconSize), slotXstart + 10, slotY + 10, null);
+        for (int i = 0; i < gp.itemH.upgradeChoices.length; i++){
+            if(gp.itemH.upgradeChoices[i] != null){
+                g2.drawImage(utool.scaleImage(gp.itemH.upgradeChoices[i].icon, iconSize, iconSize), slotXstart + 10, slotY + 10, null);
 
                 g2.setFont(g2.getFont().deriveFont(Font.BOLD, 30F));
-                g2.drawString(gp.player.upgradeChoices[i].name, getXForCenteredText(gp.player.upgradeChoices[i].name, slotXstart + gp.tileSize*3, frameX + frameWidth - 35), slotY + 30);
+                g2.drawString(gp.itemH.upgradeChoices[i].name, getXForCenteredText(gp.itemH.upgradeChoices[i].name, slotXstart + gp.tileSize*3, frameX + frameWidth - 35), slotY + 30);
                 slotY += gp.tileSize;
 
                 g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 18F));
                 int y = slotY;
-                for(String line : gp.player.upgradeChoices[i].description.split("\n")){
+                for(String line : gp.itemH.upgradeChoices[i].description.split("\n")){
                     g2.drawString(line, slotXstart + gp.tileSize*3 + 5, y);
                     y += 20;
                 }

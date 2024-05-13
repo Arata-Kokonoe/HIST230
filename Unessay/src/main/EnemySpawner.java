@@ -3,7 +3,6 @@ package main;
 import java.util.Random;
 
 import enemies.ENE_sansCulotte;
-import entity.Entity;
 import object.OBJ_Exp_Crystal;
 
 public class EnemySpawner {

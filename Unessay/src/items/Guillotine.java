@@ -1,6 +1,5 @@
 package items;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -132,10 +131,10 @@ public class Guillotine extends Item{
             }
         }
         if(level == 8){
-            gp.player.availableUpgrades.remove(gp.player.availableUpgrades.indexOf(this));
+            gp.itemH.availableUpgrades.remove(gp.itemH.availableUpgrades.indexOf(this));
             //DEBUG
             System.out.println("guillotine reached level 8\n");
-            for (Entity e: gp.player.availableUpgrades) {
+            for (Entity e: gp.itemH.availableUpgrades) {
                 System.out.println("item: " + e.name);
             }
             System.out.println("\n");

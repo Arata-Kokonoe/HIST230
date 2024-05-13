@@ -1,6 +1,5 @@
 package main;
 
-import java.awt.RenderingHints.Key;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -166,10 +165,10 @@ public class KeyHandler implements KeyListener{
             }
         }      
         if(code == KeyEvent.VK_SPACE){
-            if(gp.player.upgradeChoices[gp.ui.upgradeNum].passOrWeap == 0){
+            if(gp.itemH.upgradeChoices[gp.ui.upgradeNum].passOrWeap == 0){
                 boolean upgraded = false;
                 for(int i = 0; i < gp.player.currentPassives.length; i++){
-                    if(gp.player.currentPassives[i] != null && gp.player.upgradeChoices[gp.ui.upgradeNum].name.contentEquals(gp.player.currentPassives[i].name)){
+                    if(gp.player.currentPassives[i] != null && gp.itemH.upgradeChoices[gp.ui.upgradeNum].name.contentEquals(gp.player.currentPassives[i].name)){
                         gp.player.currentPassives[i].checkLevelUp();
                         upgraded = true;
                         break;
@@ -177,13 +176,13 @@ public class KeyHandler implements KeyListener{
                 }
                 if(upgraded == false){
                     int i = utool.checkEntityArr(gp.player.currentPassives);
-                    gp.player.currentPassives[i] = gp.player.upgradeChoices[gp.ui.upgradeNum];
+                    gp.player.currentPassives[i] = gp.itemH.upgradeChoices[gp.ui.upgradeNum];
                 }
             }
-            else if(gp.player.upgradeChoices[gp.ui.upgradeNum].passOrWeap == 1){
+            else if(gp.itemH.upgradeChoices[gp.ui.upgradeNum].passOrWeap == 1){
                 boolean upgraded = false;
                 for(int i = 0; i < gp.player.currentWeapons.length; i++){
-                    if(gp.player.currentWeapons[i] != null && gp.player.upgradeChoices[gp.ui.upgradeNum].name.contentEquals(gp.player.currentWeapons[i].name)){
+                    if(gp.player.currentWeapons[i] != null && gp.itemH.upgradeChoices[gp.ui.upgradeNum].name.contentEquals(gp.player.currentWeapons[i].name)){
                         gp.player.currentWeapons[i].checkLevelUp();
                         upgraded = true;
                         break;
@@ -191,7 +190,7 @@ public class KeyHandler implements KeyListener{
                 }
                 if(upgraded == false){
                     int i = utool.checkEntityArr(gp.player.currentWeapons);
-                    gp.player.currentWeapons[i] = gp.player.upgradeChoices[gp.ui.upgradeNum];
+                    gp.player.currentWeapons[i] = gp.itemH.upgradeChoices[gp.ui.upgradeNum];
                 }
             }
             gp.gameState = gp.playState;

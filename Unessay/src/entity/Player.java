@@ -1,22 +1,14 @@
 package entity;
 
 import java.awt.AlphaComposite;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.Transparency;
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 import java.util.ArrayList;
 import java.util.Random;
-
-import org.w3c.dom.css.Rect;
-
-import items.Badge;
 import items.Sword;
 import main.GamePanel;
-import main.ItemHandler;
 import main.KeyHandler;
 
 public class Player extends Entity{
@@ -28,15 +20,12 @@ public class Player extends Entity{
     public final int screenY;
     public int standCounter;
     public boolean attackCanceled = false;
-    public Item[] upgradeChoices;
-    public ArrayList<Item> availableUpgrades;
-
-    public final int MAX_WEAPONS = 6;
-    public final int MAX_PASSIVES = 6;
-    public final int MAX_UPGRADE_CHOICES = 4;
 
     public Item[] currentWeapons;
     public Item[] currentPassives;
+
+    public final int MAX_WEAPONS = 6;
+    public final int MAX_PASSIVES = 6; 
 
     //public int hasKey = 0;
 
@@ -71,13 +60,6 @@ public class Player extends Entity{
         leftOrRight = "right";
         currentWeapons = new Item[MAX_WEAPONS];
         currentPassives = new Item[MAX_PASSIVES];
-        upgradeChoices = new Item[MAX_UPGRADE_CHOICES];
-        availableUpgrades = new ArrayList<Item>();
-
-        for (int i = 0; i < gp.itemH.maxTypes; i++){
-            availableUpgrades.add(gp.itemH.createPassive(i));
-            availableUpgrades.add(gp.itemH.createWeapon(i));
-        }
 
         //PLAYER STATUS
         level = 1;
@@ -94,29 +76,7 @@ public class Player extends Entity{
         currentWeapons[0].level = 5;
     }
 
-    public void setUpgrades(){
-        Random rand = new Random();
-
-        upgradeChoices[0] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
-        Item temp1 = availableUpgrades.get(availableUpgrades.indexOf(upgradeChoices[0]));
-        availableUpgrades.remove(availableUpgrades.indexOf(upgradeChoices[0]));
-
-        upgradeChoices[1] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
-        Item temp2 = availableUpgrades.get(availableUpgrades.indexOf(upgradeChoices[1]));
-        availableUpgrades.remove(availableUpgrades.indexOf(upgradeChoices[1]));
-
-        upgradeChoices[2] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
-        Item temp3 = availableUpgrades.get(availableUpgrades.indexOf(upgradeChoices[2]));
-        availableUpgrades.remove(availableUpgrades.indexOf(upgradeChoices[2]));
-
-        if(luck >= 1){
-            upgradeChoices[3] = (availableUpgrades.get(rand.nextInt(availableUpgrades.size())));
-        }
-        
-        availableUpgrades.add(temp1);
-        availableUpgrades.add(temp2);
-        availableUpgrades.add(temp3);
-    }
+    
 
     public void getPlayerImage(){
         
@@ -205,8 +165,8 @@ public class Player extends Entity{
             interactNPC(npcIndex);
 
             // CHECK ENEMY COLLISION
-            int enemyIndex = gp.cChecker.checkEntity(this, gp.enemies);
-            contactEnemy(enemyIndex);
+            /*int enemyIndex = gp.cChecker.checkEntity(this, gp.enemies);
+            contactEnemy(enemyIndex);*/
 
             //CHECK EVENT COLLISION
             gp.eHandler.checkEvent();
@@ -491,7 +451,7 @@ public class Player extends Entity{
         if (exp >= nextLevelExp){
             level++;
             nextLevelExp = (int)(nextLevelExp * 1.2);
-            setUpgrades();
+            gp.itemH.setUpgrades();
     
             gp.gameState = gp.levelupState;
         }
